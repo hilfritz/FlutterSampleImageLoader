@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="flutter_downloader_notification_started">Image Download started</string>
+    <string name="flutter_downloader_notification_in_progress">Image Download in progress</string>
+    <string name="flutter_downloader_notification_canceled">Image Download canceled</string>
+    <string name="flutter_downloader_notification_failed">Image Download failed</string>
+    <string name="flutter_downloader_notification_complete">Image Download complete</string>
+    <string name="flutter_downloader_notification_paused">Image Download paused</string>
+
+</resources>
