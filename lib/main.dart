@@ -187,9 +187,10 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
                         ),
                         textAlign: TextAlign.center,
                       ),
+                      freeSpageSmall,
                       (this.loadingVisibility==true?SpinKitFadingCircle(
                         color: Colors.lightBlueAccent,
-                        size: 25.0,
+                        size: 15.0,
                       ):Container()),
                     ],
                   )
@@ -231,14 +232,13 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
 
   Widget _getGridviewItems(int index, bool isPortrait, DownloadTaskInfo file){
     //print("_getGridviewItems: [index:$index] [isPortrait:$isPortrait] [path:${file.path}");
-    File tempFile = File (file.path);
     return Container(
         padding: EdgeInsets.all(isPortrait==true?10:0),
         child: Stack(
           children: <Widget>[
             Center(child: CircularProgressIndicator()),
             Center(
-                child: Image.file(tempFile,width: 200,height: 200,fit: BoxFit.fill )
+                child: Image.file(file.file,width: 200,height: 200,fit: BoxFit.fill )
             ),
           ],
         )
