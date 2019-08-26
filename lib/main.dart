@@ -159,8 +159,8 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
                       ):Container(),
                 isTapped==false?SpringButton(
                   SpringButtonType.OnlyScale,
-                  new InstructionTextWidget("Just a small Tap", false),
-                  onTapDown: (x) {
+                  new InstructionTextWidget("Tap & Hold for more", false),
+                  onLongPress: () {
                     setState(() {
                       print("tap:");
                       isTapped = !isTapped;
@@ -184,11 +184,8 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
     }
     var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return GestureDetector(
-           onTap: () {
+           onLongPress: () {
             this.mainPresenter.onTap();
-          },
-          onLongPress: () {
-            this.mainPresenter.onTapAndHold();
           },
           child: Container(
             color: Colors.black,
@@ -204,7 +201,7 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           new Text(
-                            'Another gentle a tap',
+                            'Tap & Hold again',
                             style: TextStyle(fontWeight: FontWeight.w400,
                               fontSize: 18,
                               color: Colors.lightBlueAccent,
