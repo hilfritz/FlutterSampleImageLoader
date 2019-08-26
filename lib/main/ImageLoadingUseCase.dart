@@ -1,5 +1,12 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui';
+
+
+import 'package:flutter/material.dart';
+import 'package:image/image.dart' as Image;
+import 'package:rxdart/rxdart.dart';
 
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:imageloader_sample/main/MainPresenter.dart';
@@ -26,11 +33,9 @@ abstract class ImageLoadingUseCase {
 abstract class ImageLoadingUseCasePresenter {}
 
 abstract class ImageLoadingUseCaseView {
-
-  List<DownloadTaskInfo> filePaths = new List<DownloadTaskInfo>();
-  bool loadingVisibility = false;
+bool loadingVisibility = false;
   void showErrorPopup(String str);
-  void addImageToDisplay(DownloadTaskInfo files);
+  void addImageToDisplay(Uint8List files);
   void setLoadingAnimationVisibility(bool visibility);
 }
 
@@ -86,7 +91,7 @@ class ImageLoadingUseCaseImpl
           new DateTime.now().millisecondsSinceEpoch.toString();
       String fileNameWithExtension =
           currentTimestamp + "_" + x.toString() + ".png";
-      String url = "https://picsum.photos/200";
+      String url = "https://picsum.photos/600/800";
       String taskId = "";
       File file = File(fileManager.basePath + "/" + fileNameWithExtension);
       taskId = await downloadManager.addTaskForConcurrentDownload(
@@ -97,19 +102,9 @@ class ImageLoadingUseCaseImpl
           false,
           file,
           false);
-//      logger.logg("run: [" +
-//          x.toString() +
-//          "] [url:" +
-//          url +
-//          "] [taskId: $taskId][fileNameWithExtension:" +
-//          fileNameWithExtension +
-//          "] [path:" +
-//          fileManager.basePath +
-//          "/" +
-//          "]");
+
     }
     //DOWNLOAD ALL FILES CONCURRENTLY
-
     downloadManager.startDownload();
   }
 
@@ -120,12 +115,33 @@ class ImageLoadingUseCaseImpl
     view.showErrorPopup("Oops something went wrong, please try again.");
   }
 
+Future<Uint8List> _readFileByte(String filePath) async {
+    Uri myUri = Uri.parse(filePath);
+    File audioFile = new File.fromUri(myUri);
+    Uint8List bytes;
+    await audioFile.readAsBytes().then((value) {
+    bytes = Uint8List.fromList(value); 
+    print('reading of bytes is completed');
+  }).catchError((onError) {
+      print('Exception Error while reading audio from path:' +
+      onError.toString());
+  });
+  return bytes;
+}
 
   @override
   void onFileDownLoaded(
       DownloadTaskInfo downloadTaskInfo, DownloadTaskStatus status) {
-    if (status == DownloadTaskStatus.complete) {
-      view.addImageToDisplay(downloadTaskInfo);
+
+        
+    if (status == DownloadTaskStatus.complete) {      
+      //PASS BYTES TO VIEW
+      _readFileByte(downloadTaskInfo.path).then((x){
+        view.addImageToDisplay(x);
+      }, onError: (e){
+        print(e);
+      });
+        
       if (downloadManager.downloadTasksList.length==0){
         view.setLoadingAnimationVisibility(false);
       }

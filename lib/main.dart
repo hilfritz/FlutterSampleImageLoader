@@ -1,5 +1,6 @@
 
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -49,11 +50,12 @@ class MyHomePage extends StatefulWidget  {
 }
 
 class _MyHomePageState extends State<MyHomePage> implements MainView {
-  bool permissionGranted = false;
+
   @override
   bool loadingVisibility = false;
+  bool permissionGranted = false;
   @override
-  List<DownloadTaskInfo> filePaths = new List<DownloadTaskInfo>();
+  List<Uint8List> images = new List<Uint8List>();
   final MainPresenter mainPresenter;
   bool isTapped = false;
   _MyHomePageState(this.mainPresenter);
@@ -159,7 +161,7 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
                       ):Container(),
                 isTapped==false?SpringButton(
                   SpringButtonType.OnlyScale,
-                  new InstructionTextWidget("Tap & Hold for more", false),
+                  new InstructionTextWidget("Tap & Hold", false),
                   onLongPress: () {
                     setState(() {
                       print("tap:");
@@ -179,7 +181,7 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
   }
 
   Widget getBody() {
-    if (this.filePaths.length==0){
+    if (this.images.length==0){
       return getInstructionsWidget();
     }
     var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
@@ -201,7 +203,7 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           new Text(
-                            'Tap & Hold again',
+                            'Tap & hold again',
                             style: TextStyle(fontWeight: FontWeight.w400,
                               fontSize: 18,
                               color: Colors.lightBlueAccent,
@@ -209,14 +211,16 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
                             textAlign: TextAlign.center,
                           ),
                           freeSpageSmall,
-                          (this.loadingVisibility==true?SpinKitFadingCircle(
+                           (this.loadingVisibility==true?SpinKitFadingCircle(
                             color: Colors.lightBlueAccent,
                             size: 15.0,
-                          ):Container()),
+                          ):Container())
                         ],
                       )
                       ,
                       freeSpageSmall,
+                     
+
                   Padding(
                       padding: const EdgeInsets.only(top: 15.0),
                       child: getImageGrid())
@@ -246,31 +250,33 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
       width: w ,
       height: h ,
     );
-
   }
 
-  Widget _getGridviewItems(int index, bool isPortrait, DownloadTaskInfo file){
-    //print("_getGridviewItems: [index:$index] [isPortrait:$isPortrait] [path:${file.path}");
+  Widget _getGridviewItems(int index, bool isPortrait, Uint8List file){        
     return Container(
         padding: EdgeInsets.all(isPortrait==true?10:0),
         child: Stack(
           children: <Widget>[
-            Center(child: CircularProgressIndicator()),
-            Center(
-                child: Image.file(file.file,width: 200,height: 200,fit: BoxFit.fill )
+            Center(child: SpinKitThreeBounce(
+                                color: Colors.lightBlueAccent,
+                                size: 15.0,)),
+            Center(                
+                child:                 
+                Image.memory(              
+                  file, fit: BoxFit.cover, width: 200, height: 200,
+                  )                
             ),
           ],
         )
-
     );
   }
 
   List<Widget> createGridListItems(bool isPortrait) {
-    int length = this.filePaths.length;
+    int length = this.images.length;
     print("createGridListItems: length:$length");
     List<Widget> list = List<Widget>();
     for (int x = 0; x < length; x++){
-      list.add(_getGridviewItems(x,isPortrait, this.filePaths[x]));
+      list.add(_getGridviewItems(x,isPortrait, this.images[x]));
     }
     list.add(Container());
     list.add(Container());
@@ -296,15 +302,14 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
   }
 
   @override
-  void addImageToDisplay(DownloadTaskInfo files) {
+  void addImageToDisplay(Uint8List files) {
     setState(() {
-      this.filePaths.add(files);
+      this.images.add(files);
     });
   }
 
   @override
   void setLoadingAnimationVisibility(bool vs) {
-
     if (vs==false){
       Future.delayed(const Duration(milliseconds: 500), () {
         setState(() {
@@ -328,7 +333,6 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
 }
 
 class InstructionTextWidget extends StatelessWidget {
-
 //  const InstructionTextWidget({
 //    Key key,
 //  }) : super(key: key);
@@ -349,8 +353,6 @@ class InstructionTextWidget extends StatelessWidget {
               textAlign: TextAlign.center, text: [text],
             ) ,
         );
-
-
     return retVal;
   }
 }
