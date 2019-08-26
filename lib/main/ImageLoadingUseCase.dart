@@ -47,7 +47,7 @@ class ImageLoadingUseCaseImpl
 
   DownloadManager downloadManager;
   @override
-  int NUMBER_OF_IMAGES = 10;
+  int NUMBER_OF_IMAGES = 4;
 
   @override
   ImageLoadingUseCasePresenter presenter;

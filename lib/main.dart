@@ -8,6 +8,7 @@ import 'package:imageloader_sample/main/MainPresenter.dart';
 import 'package:imageloader_sample/managers/DownloadManager.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:spring_button/spring_button.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 void main() {
   //INITIALIZE SINGLETON SESSION
@@ -54,6 +55,7 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
   @override
   List<DownloadTaskInfo> filePaths = new List<DownloadTaskInfo>();
   final MainPresenter mainPresenter;
+  bool isTapped = false;
   _MyHomePageState(this.mainPresenter);
   @override
   void initState() {
@@ -66,43 +68,33 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
     });
   }
 
-  Widget freeSpage = Container(padding: EdgeInsets.all(10),);
+  Widget freeSpace = Container(padding: EdgeInsets.all(10),);
   Widget freeSpageSmall = Container(padding: EdgeInsets.all(5),);
 
   void askPermissions() async{
     //Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions([PermissionGroup.storage]);
     PermissionStatus permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
     if (permission==PermissionStatus.granted){
-      permissionGranted = true;
+      setState(() {
+        permissionGranted = true;
+      });      
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      permissionGranted = false;
-    });
     //ASK THE CORRECT PERMISSIONS FIRST
     askPermissions();
-    return GestureDetector(
-        onTap: () {
-          this.mainPresenter.onTap();
-        },
-        onLongPress: () {
-          this.mainPresenter.onTapAndHold();
-        },
-        child: Scaffold(
-
+    return Scaffold(
           appBar: AppBar(
             title: Text(widget.title),
           ),
-          body: permissionGranted==false?getBody():requestPermissionBody(),
+          body: getBody(),
           // This trailing comma makes auto-formatting nicer for build methods.
-        ));
+        );
   }
 
   Widget requestPermissionBody(){
-
     Widget requestButton = MaterialButton(
       onPressed: (){
         return askPermissions();
@@ -131,8 +123,8 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
             ),
             textAlign: TextAlign.center,
           ),
-          freeSpage,
-          freeSpage,
+          freeSpace,
+          freeSpace,
           requestButton,
 
           //child: getGridView(isPortrait)),
@@ -143,20 +135,46 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
     );
   }
 
-  Widget getInstructionsWidget(){
+
+  
+  Widget getInstructionsWidget(){  
     return Container(
         color: Colors.black,
         padding: EdgeInsets.all(30),
-        child: Center(
-          child:new Text(
-            'Just a small Tap',
-            style: TextStyle(fontWeight: FontWeight.w400,
-              fontSize: 25,
-              color: Colors.lightBlueAccent,
+        child:
+          Center(          
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                isTapped==true?SpinKitWave(
+                                color: Colors.lightBlueAccent,
+                                size: 50.0,
+                              ):Container(),
+                isTapped==true?freeSpace:Container(),
+                //"Alright!, \nNow loading..."
+                isTapped==true?Center(
+                        child:
+                        new InstructionTextWidget("Now loading..", true),
+                      ):Container(),
+                isTapped==false?SpringButton(
+                  SpringButtonType.OnlyScale,
+                  new InstructionTextWidget("Just a small Tap", false),
+                  onTapDown: (x) {
+                    setState(() {
+                      print("tap:");
+                      isTapped = !isTapped;
+                      Future.delayed(const Duration(milliseconds: 2000), () {
+                        this.mainPresenter.populate();
+                      });
+                    });                   
+                  },
+                ):Container(),
+
+                
+              ],
             ),
-            textAlign: TextAlign.left,
-          ) ,
-        )
+          )
     );
   }
 
@@ -164,46 +182,50 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
     if (this.filePaths.length==0){
       return getInstructionsWidget();
     }
-
     var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    return Container(
-        color: Colors.black,
-        padding: EdgeInsets.all(10),
-        child: SingleChildScrollView(
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  freeSpageSmall,
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+    return GestureDetector(
+           onTap: () {
+            this.mainPresenter.onTap();
+          },
+          onLongPress: () {
+            this.mainPresenter.onTapAndHold();
+          },
+          child: Container(
+            color: Colors.black,
+            padding: EdgeInsets.all(10),
+            child: SingleChildScrollView(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      new Text(
-                        'Another gentle a tap',
-                        style: TextStyle(fontWeight: FontWeight.w400,
-                          fontSize: 18,
-                          color: Colors.lightBlueAccent,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
                       freeSpageSmall,
-                      (this.loadingVisibility==true?SpinKitFadingCircle(
-                        color: Colors.lightBlueAccent,
-                        size: 15.0,
-                      ):Container()),
-                    ],
-                  )
-                  ,
-                  freeSpageSmall,
-
-
-              Padding(
-                  padding: const EdgeInsets.only(top: 15.0),
-                  child: getImageGrid())
-                  //child: getGridView(isPortrait)),
-            ])));
-
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          new Text(
+                            'Another gentle a tap',
+                            style: TextStyle(fontWeight: FontWeight.w400,
+                              fontSize: 18,
+                              color: Colors.lightBlueAccent,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          freeSpageSmall,
+                          (this.loadingVisibility==true?SpinKitFadingCircle(
+                            color: Colors.lightBlueAccent,
+                            size: 15.0,
+                          ):Container()),
+                        ],
+                      )
+                      ,
+                      freeSpageSmall,
+                  Padding(
+                      padding: const EdgeInsets.only(top: 15.0),
+                      child: getImageGrid())
+                      //child: getGridView(isPortrait)),
+                ]))),
+    );
   }
 
 
@@ -306,4 +328,32 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
     this.mainPresenter.destroy();
   }
 
+}
+
+class InstructionTextWidget extends StatelessWidget {
+
+//  const InstructionTextWidget({
+//    Key key,
+//  }) : super(key: key);
+  String text = "";
+  bool repeatAnimation = false;
+  InstructionTextWidget(this.text, this.repeatAnimation);
+  @override
+  Widget build(BuildContext context) {
+    Widget retVal = Center(
+          child:
+            new FadeAnimatedTextKit(  
+              isRepeatingAnimation: repeatAnimation,            
+              textStyle: TextStyle(fontWeight: FontWeight.w400,
+                fontSize: 25,
+                color: Colors.lightBlueAccent,
+
+              ),
+              textAlign: TextAlign.center, text: [text],
+            ) ,
+        );
+
+
+    return retVal;
+  }
 }

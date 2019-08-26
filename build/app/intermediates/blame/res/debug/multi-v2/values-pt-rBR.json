@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/hilfritz/Documents/flutter-projects/FlutterSampleImageLoader/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-pt-rBR/values-pt-rBR.xml",
+            "outputFile": "/Users/herdmacbook1/Documents/github/FlutterSampleImageLoader/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-pt-rBR/values-pt-rBR.xml",
             "map": [
                 {
-                    "source": "/Users/hilfritz/.gradle/caches/transforms-2/files-2.1/fff0dbc80e7998fa4122c8cd3a8ff2be/core-1.1.0-rc02/res/values-pt-rBR/values-pt-rBR.xml",
+                    "source": "/Users/herdmacbook1/.gradle/caches/transforms-2/files-2.1/fff0dbc80e7998fa4122c8cd3a8ff2be/core-1.1.0-rc02/res/values-pt-rBR/values-pt-rBR.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

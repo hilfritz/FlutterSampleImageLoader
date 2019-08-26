@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/hilfritz/Documents/flutter-projects/FlutterSampleImageLoader/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-v23/values-v23.xml",
+            "outputFile": "/Users/herdmacbook1/Documents/github/FlutterSampleImageLoader/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-v23/values-v23.xml",
             "map": [
                 {
-                    "source": "/Users/hilfritz/.gradle/caches/transforms-2/files-2.1/743a81bbcd892b613cf79912175f4d63/work-runtime-2.1.0/res/values-v23/values-v23.xml",
+                    "source": "/Users/herdmacbook1/.gradle/caches/transforms-2/files-2.1/743a81bbcd892b613cf79912175f4d63/work-runtime-2.1.0/res/values-v23/values-v23.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",

@@ -1,29 +1,37 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/hilfritz/Documents/flutter-projects/FlutterSampleImageLoader/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values/values.xml",
+            "outputFile": "/Users/herdmacbook1/Documents/github/FlutterSampleImageLoader/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values/values.xml",
             "map": [
                 {
-                    "source": "/Users/hilfritz/Documents/flutter-projects/FlutterSampleImageLoader/android/app/src/main/res/values/styles.xml",
+                    "source": "/Users/herdmacbook1/Documents/github/FlutterSampleImageLoader/android/app/src/main/res/values/strings.xml",
                     "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endLines": "6",
-                        "endColumns": "12",
-                        "endOffsets": "347"
+                        "startLines": "4,6,5,3,7,2",
+                        "startColumns": "4,4,4,4,4,4",
+                        "startOffsets": "245,427,338,146,520,55",
+                        "endColumns": "92,92,88,98,88,90",
+                        "endOffsets": "333,515,422,240,604,141"
                     },
                     "to": {
-                        "startLines": "87",
-                        "startColumns": "4",
-                        "startOffsets": "5423",
-                        "endLines": "91",
-                        "endColumns": "12",
-                        "endOffsets": "5715"
+                        "startLines": "80,81,82,83,84,85",
+                        "startColumns": "4,4,4,4,4,4",
+                        "startOffsets": "4798,4891,4984,5073,5172,5261",
+                        "endColumns": "92,92,88,98,88,90",
+                        "endOffsets": "4886,4979,5068,5167,5256,5347"
                     }
                 },
                 {
-                    "source": "/Users/hilfritz/.gradle/caches/transforms-2/files-2.1/fff0dbc80e7998fa4122c8cd3a8ff2be/core-1.1.0-rc02/res/values/values.xml",
+                    "source": "/Users/herdmacbook1/.gradle/caches/transforms-2/files-2.1/743a81bbcd892b613cf79912175f4d63/work-runtime-2.1.0/res/values/values.xml",
+                    "from": {
+                        "startLines": "2,3,4",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,120,184",
+                        "endColumns": "64,63,60",
+                        "endOffsets": "115,179,240"
+                    }
+                },
+                {
+                    "source": "/Users/herdmacbook1/.gradle/caches/transforms-2/files-2.1/fff0dbc80e7998fa4122c8cd3a8ff2be/core-1.1.0-rc02/res/values/values.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,83,84,88,89,90,91,98,141,173,210",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -42,30 +50,22 @@
                     }
                 },
                 {
-                    "source": "/Users/hilfritz/Documents/flutter-projects/FlutterSampleImageLoader/android/app/src/main/res/values/strings.xml",
+                    "source": "/Users/herdmacbook1/Documents/github/FlutterSampleImageLoader/android/app/src/main/res/values/styles.xml",
                     "from": {
-                        "startLines": "4,6,5,3,7,2",
-                        "startColumns": "4,4,4,4,4,4",
-                        "startOffsets": "245,427,338,146,520,55",
-                        "endColumns": "92,92,88,98,88,90",
-                        "endOffsets": "333,515,422,240,604,141"
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "6",
+                        "endColumns": "12",
+                        "endOffsets": "347"
                     },
                     "to": {
-                        "startLines": "80,81,82,83,84,85",
-                        "startColumns": "4,4,4,4,4,4",
-                        "startOffsets": "4798,4891,4984,5073,5172,5261",
-                        "endColumns": "92,92,88,98,88,90",
-                        "endOffsets": "4886,4979,5068,5167,5256,5347"
-                    }
-                },
-                {
-                    "source": "/Users/hilfritz/.gradle/caches/transforms-2/files-2.1/743a81bbcd892b613cf79912175f4d63/work-runtime-2.1.0/res/values/values.xml",
-                    "from": {
-                        "startLines": "2,3,4",
-                        "startColumns": "4,4,4",
-                        "startOffsets": "55,120,184",
-                        "endColumns": "64,63,60",
-                        "endOffsets": "115,179,240"
+                        "startLines": "87",
+                        "startColumns": "4",
+                        "startOffsets": "5423",
+                        "endLines": "91",
+                        "endColumns": "12",
+                        "endOffsets": "5715"
                     }
                 }
             ]
