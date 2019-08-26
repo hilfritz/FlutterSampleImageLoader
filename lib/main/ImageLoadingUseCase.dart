@@ -31,6 +31,7 @@ abstract class ImageLoadingUseCaseView {
   void showErrorPopup(String str);
   void addImageToDisplay(Uint8List files);
   void setLoadingAnimationVisibility(bool visibility);
+  void clearImages();
 }
 
 abstract class ImageLoadingUseCaseModel {}
@@ -77,27 +78,29 @@ class ImageLoadingUseCaseImpl
     lastRun = new DateTime.now();
     logger.logg("run: ");
     view.setLoadingAnimationVisibility(true);
-    //CREATES THE IMAGE DOWNLOAD TASKS
-    for (int x = 0; x < NUMBER_OF_IMAGES; x++) {
-      String currentTimestamp =
-          new DateTime.now().millisecondsSinceEpoch.toString();
-      String fileNameWithExtension =
-          currentTimestamp + "_" + x.toString() + ".png";
-      String url = "https://picsum.photos/600/800";
-      String taskId = "";
-      File file = File(fileManager.basePath + "/" + fileNameWithExtension);
-      taskId = await downloadManager.addTaskForConcurrentDownload(
-          url,
-          fileManager.basePath + "/",
-          fileNameWithExtension,
-          false,
-          false,
-          file,
-          false);
-
-    }
-    //DOWNLOAD ALL FILES CONCURRENTLY
-    downloadManager.startDownload();
+    view.clearImages();
+    //DOWNLOAD THE IMAGES
+    Future.delayed(const Duration(milliseconds: 1500), () async{
+      for (int x = 0; x < NUMBER_OF_IMAGES; x++) {
+        String currentTimestamp =
+            new DateTime.now().millisecondsSinceEpoch.toString();
+        String fileNameWithExtension =
+            currentTimestamp + "_" + x.toString() + ".png";
+        String url = "https://picsum.photos/600/800";
+        String taskId = "";
+        File file = File(fileManager.basePath + "/" + fileNameWithExtension);
+        taskId = await downloadManager.addTaskForConcurrentDownload(
+            url,
+            fileManager.basePath + "/",
+            fileNameWithExtension,
+            false,
+            false,
+            file,
+            false);
+      }
+    });
+     
+    
   }
 
   @override

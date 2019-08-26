@@ -157,10 +157,8 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
                   onLongPress: () {
                     setState(() {
                       print("tap:");
-                      isTapped = !isTapped;
-                      Future.delayed(const Duration(milliseconds: 2000), () {
-                        this.mainPresenter.populate();
-                      });
+                      isTapped = !isTapped;                      
+                      this.mainPresenter.populate();                      
                     });                   
                   },
                 ):Container(),                
@@ -200,11 +198,11 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          freeSpageSmall,
-                           (this.loadingVisibility==true?SpinKitFadingCircle(
-                            color: Colors.lightBlueAccent,
-                            size: 15.0,
-                          ):Container())
+                          // freeSpageSmall,
+                          //  (this.loadingVisibility==true?SpinKitFadingCircle(
+                          //   color: Colors.lightBlueAccent,
+                          //   size: 15.0,
+                          // ):Container())
                         ],
                       )
                       ,
@@ -305,6 +303,13 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
   void dispose() {
     super.dispose();
     this.mainPresenter.destroy();
+  }
+
+  @override
+  void  clearImages() {
+    setState(() {
+      images= new List<Uint8List>();
+    });    
   }
 
 }
