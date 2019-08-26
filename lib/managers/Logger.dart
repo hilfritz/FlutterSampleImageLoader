@@ -1,5 +1,8 @@
 import 'dart:developer';
-
+/**
+ *
+ * @author Hilfritz Camallere
+ */
 abstract class Logger{
   void start(String tag);
   void end();
@@ -32,7 +35,6 @@ class LoggerImpl implements Logger{
   void start(String tag) {
     TAG = tag;
     logString = "";
-
   }
 
   @override

@@ -50,7 +50,6 @@ class MyHomePage extends StatefulWidget  {
 }
 
 class _MyHomePageState extends State<MyHomePage> implements MainView {
-
   @override
   bool loadingVisibility = false;
   bool permissionGranted = false;
@@ -59,15 +58,11 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
   final MainPresenter mainPresenter;
   bool isTapped = false;
   _MyHomePageState(this.mainPresenter);
+
   @override
   void initState() {
     super.initState();
     this.mainPresenter.initView(this);
-    WidgetsBinding.instance
-        .addPostFrameCallback((x){
-          //this.mainPresenter.populate();
-
-    });
   }
 
   Widget freeSpace = Container(padding: EdgeInsets.all(10),);
@@ -106,7 +101,6 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
       textColor: Colors.blue,
       padding: EdgeInsets.all( 15),
       textTheme: ButtonTextTheme.accent,
-
       child: Text('Allow Storage Permission', style: TextStyle(fontSize: 20.0),),
       shape: StadiumBorder(
 
@@ -128,8 +122,6 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
           freeSpace,
           freeSpace,
           requestButton,
-
-          //child: getGridView(isPortrait)),
         ]);
     return Container(
       padding: EdgeInsets.all( 25),
@@ -171,9 +163,7 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
                       });
                     });                   
                   },
-                ):Container(),
-
-                
+                ):Container(),                
               ],
             ),
           )
@@ -219,8 +209,6 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
                       )
                       ,
                       freeSpageSmall,
-                     
-
                   Padding(
                       padding: const EdgeInsets.only(top: 15.0),
                       child: getImageGrid())
@@ -228,7 +216,6 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
                 ]))),
     );
   }
-
 
   Widget getImageGrid() {
     var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
@@ -283,16 +270,6 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
     list.add(Container());
     return list;
   }
-
-
-
-
-  @override
-  Widget getLoadingAnimation() {
-
-    return Container();
-  }
-
   @override
   bool isLoadingAnimationHidden;
 
@@ -333,9 +310,6 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
 }
 
 class InstructionTextWidget extends StatelessWidget {
-//  const InstructionTextWidget({
-//    Key key,
-//  }) : super(key: key);
   String text = "";
   bool repeatAnimation = false;
   InstructionTextWidget(this.text, this.repeatAnimation);

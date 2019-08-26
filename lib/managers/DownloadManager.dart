@@ -4,7 +4,7 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 /**
  * Download manager uses the Android Work manager class to download files in the background
  * - https://developer.android.com/topic/libraries/architecture/workmanager
- * 
+ * @author Hilfritz Camallere
  */
 abstract class DownloadManager{
   FileDownloadCallback downloadCallback;
