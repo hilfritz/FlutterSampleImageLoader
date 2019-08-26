@@ -1,16 +1,25 @@
 # imageloader_sample
 
-A new Flutter project.
+A Simple Flutter project that loads images from the server, downloads them in the background and displays in a Grid.
 
-## Getting Started
+## Usage
 
-This project is a starting point for a Flutter application.
+- Open the app named "imageloader_sample"
 
-A few resources to get you started if this is your first Flutter project:
+- Just tap Tap and Hold 
+- (To start from empty list, kill the app first before opening again)
+- Apk Install link is [here](https://github.com/hilfritz/FlutterSampleImageLoader/blob/master/build/app/outputs/apk/debug/app-debug.apk?raw=true)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Code Architecture
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Usage of a **modified Clean Architecture** code pattern.  Though there is only 1 usecaes of now, this Architecture's usage of usecases will offer better code reusability and structure as an app grows bigger.
+
+### Download of Images in background
+- The app uses Native Android's WorkManager to download the images, this also covers doing the process in the background thread *(No need to create a service manually)*. For iOS support, to be implemented in the future.
+
+-  _Download Feature - if suddently device got no internet connection, the app will add the download task into queue. Whenever the device gets good internet connection, the app will continue loading the image_
+-  After each image is fetched from the api, the usecase accepts the image byte data from background process and passes it to the foreground UI for displaying.
+
+### *The project is not configured yet to run on iOS devices.
+
+
