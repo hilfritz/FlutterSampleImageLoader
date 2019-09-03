@@ -50,8 +50,6 @@ class MyHomePage extends StatefulWidget  {
 }
 
 class _MyHomePageState extends State<MyHomePage> implements MainView {
-  @override
-  bool loadingVisibility = false;
   bool permissionGranted = false;
   @override
   List<Uint8List> images = new List<Uint8List>();
@@ -281,22 +279,6 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
     setState(() {
       this.images.add(files);
     });
-  }
-
-  @override
-  void setLoadingAnimationVisibility(bool vs) {
-    if (vs==false){
-      Future.delayed(const Duration(milliseconds: 500), () {
-        setState(() {
-          this.loadingVisibility = vs;
-        });
-
-      });
-    }else{
-      setState(() {
-        this.loadingVisibility = vs;
-      });
-    }
   }
 
   @override

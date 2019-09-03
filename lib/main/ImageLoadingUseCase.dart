@@ -27,10 +27,8 @@ abstract class ImageLoadingUseCase {
 
 abstract class ImageLoadingUseCasePresenter {}
 abstract class ImageLoadingUseCaseView {
-  bool loadingVisibility = false;
   void showErrorPopup(String str);
   void addImageToDisplay(Uint8List files);
-  void setLoadingAnimationVisibility(bool visibility);
   void clearImages();
 }
 
@@ -77,7 +75,6 @@ class ImageLoadingUseCaseImpl
     }
     lastRun = new DateTime.now();
     logger.logg("run: ");
-    view.setLoadingAnimationVisibility(true);
     view.clearImages();
     //DOWNLOAD THE IMAGES
     Future.delayed(const Duration(milliseconds: 1500), () async{
@@ -106,7 +103,7 @@ class ImageLoadingUseCaseImpl
   @override
   void onDownloadException(dynamic e) {
     logger.logg("onDownloadException: ");
-    view.setLoadingAnimationVisibility(false);
+
     view.showErrorPopup("Oops something went wrong, please try again.");
   }
 
@@ -135,7 +132,7 @@ class ImageLoadingUseCaseImpl
         view.showErrorPopup("Oops something went wrong, please try again.");
       });        
       if (downloadManager.downloadTasksList.length==0){
-        view.setLoadingAnimationVisibility(false);
+        
       }
     }
   }

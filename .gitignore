@@ -1,5 +1,6 @@
 ### Flutter Generated
-
+/build/
+/android/.gradle/
 # Miscellaneous
 *.class
 *.lock
@@ -69,7 +70,8 @@ build/
 ### https://raw.github.com/github/gitignore//Android.gitignore
 
 # Built application files
-*.apk
+/build/
+
 *.ap_
 
 # Files for the ART/Dalvik VM
