@@ -6,10 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:image/image.dart' as Image;
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:imageloader_sample/main/MainPresenter.dart';
 import 'package:imageloader_sample/managers/DownloadManager.dart';
 import 'package:imageloader_sample/managers/FileManager.dart';
 import 'package:imageloader_sample/managers/Logger.dart';
+
+import 'MainPresenter.dart';
 
 abstract class ImageLoadingUseCase {
   int NUMBER_OF_IMAGES = 0;

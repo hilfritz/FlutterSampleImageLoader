@@ -1,5 +1,8 @@
 import 'package:imageloader_sample/components/PresenterComponent.dart';
 
+/**
+ * @author Hilfritz Camallere
+ */
 abstract class NavigationManager{
   PresenterComponent presenterComponent;
   void init(PresenterComponent presenterComponent);

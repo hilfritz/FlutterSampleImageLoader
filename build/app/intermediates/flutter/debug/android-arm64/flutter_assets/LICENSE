@@ -151,6 +151,7 @@ async
 collection
 convert
 crypto
+isolate
 stream_channel
 typed_data
 
@@ -3234,6 +3235,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 --------------------------------------------------------------------------------
 charcode
+http
+http_parser
 matcher
 path
 source_span

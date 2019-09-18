@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
  * https://medium.com/flutter-community/flutter-effectively-scale-ui-according-to-different-screen-sizes-2cb7c115ea0a
  * https://medium.com/flutter-community/developing-for-multiple-screen-sizes-and-orientations-in-flutter-fragments-in-flutter-a4c51b849434
  * https://stackoverflow.com/questions/49484549/can-we-check-the-device-to-be-smartphone-or-tablet-in-flutter
+ * @author Hilfritz Camallere
  */
 class DisplayElements{
   static double width = 0;
@@ -16,6 +17,7 @@ class DisplayElements{
   static double safeAreaHorizontal = 0;
   static double safeAreaVertical = 0;
   static bool useMobileLayout = false;
+
   static void init(BuildContext context){
     var mediaQueryData = MediaQuery.of(context);
     width = mediaQueryData.size.width;

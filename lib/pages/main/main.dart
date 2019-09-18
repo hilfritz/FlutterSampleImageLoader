@@ -5,12 +5,12 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:imageloader_sample/components/SessionComponent.dart';
-import 'package:imageloader_sample/main/MainPresenter.dart';
-import 'package:imageloader_sample/managers/DownloadManager.dart';
 import 'package:imageloader_sample/utils/DisplayElemants.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:spring_button/spring_button.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+
+import 'MainPresenter.dart';
 
 void main() {
   //INITIALIZE SINGLETON SESSION
@@ -28,7 +28,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DisplayElements.init(context);
     this.mainPresenter = this.sessionComponent.presenterComponent.mainPresenter;
 
     return MaterialApp(
@@ -82,6 +81,7 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
 
   @override
   Widget build(BuildContext context) {
+    DisplayElements.init(context);
     //ASK THE CORRECT PERMISSIONS FIRST
     askPermissions();
     return Scaffold(

@@ -1,8 +1,9 @@
-import 'package:imageloader_sample/main/ImageLoadingUseCase.dart';
 import 'package:imageloader_sample/managers/DownloadManager.dart';
 import 'package:imageloader_sample/managers/FileManager.dart';
 import 'package:imageloader_sample/managers/Logger.dart';
 import 'package:rxdart/rxdart.dart';
+
+import 'ImageLoadingUseCase.dart';
 /**
  * @author Hilfritz Camallere
  */
@@ -60,7 +61,6 @@ class MainPresenterImpl implements MainPresenter{
   @override
   void onTapAndHold() {
     populate();
-    //logger.logg("onTapAndHold");
   }
 
   @override

@@ -1,7 +1,7 @@
-import 'package:imageloader_sample/main/MainPresenter.dart';
 import 'package:imageloader_sample/managers/DownloadManager.dart';
 import 'package:imageloader_sample/managers/FileManager.dart';
 import 'package:imageloader_sample/managers/Logger.dart';
+import 'package:imageloader_sample/pages/main/MainPresenter.dart';
 /**
  * Component designed to hold all the presenters in the app
  * - singleton helps prevent multiple instances of objects
