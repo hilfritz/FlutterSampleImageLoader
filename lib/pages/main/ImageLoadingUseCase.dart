@@ -10,9 +10,10 @@ import 'package:imageloader_sample/managers/DownloadManager.dart';
 import 'package:imageloader_sample/managers/FileManager.dart';
 import 'package:imageloader_sample/managers/Logger.dart';
 
+import '../Base.dart';
 import 'MainPresenter.dart';
 
-abstract class ImageLoadingUseCase {
+abstract class ImageLoadingUseCase implements BaseUseCase{
   int NUMBER_OF_IMAGES = 0;
 
   ImageLoadingUseCaseView view;
@@ -23,11 +24,9 @@ abstract class ImageLoadingUseCase {
   void init(MainPresenter p, FileManager fm, DownloadManager dm, Logger lg,
       ImageLoadingUseCaseView v);
   void run();
-  void destroy();
 }
-
-abstract class ImageLoadingUseCasePresenter {}
-abstract class ImageLoadingUseCaseView {
+abstract class ImageLoadingUseCasePresenter implements BasePresenter{}
+abstract class ImageLoadingUseCaseView{
   void showErrorPopup(String str);
   void addImageToDisplay(Uint8List files);
   void clearImages();
@@ -97,14 +96,11 @@ class ImageLoadingUseCaseImpl
             false);
       }
     });
-     
-    
   }
 
   @override
   void onDownloadException(dynamic e) {
     logger.logg("onDownloadException: ");
-
     view.showErrorPopup("Oops something went wrong, please try again.");
   }
 

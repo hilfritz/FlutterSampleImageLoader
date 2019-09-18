@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 /**
- *
  * @author Hilfritz Camallere
  */
 abstract class FileManager{

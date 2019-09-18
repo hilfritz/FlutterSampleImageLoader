@@ -3,7 +3,6 @@ import 'package:imageloader_sample/managers/DownloadManager.dart';
 import 'package:imageloader_sample/managers/FileManager.dart';
 import 'package:imageloader_sample/managers/Logger.dart';
 import 'package:imageloader_sample/managers/NavigationManager.dart';
-import 'package:imageloader_sample/utils/DisplayElemants.dart';
 /**
  * Singleton object for the app runtime
  * - THIS IS WHERE PRESENTERS, MODELS ARE INITIALIZED
