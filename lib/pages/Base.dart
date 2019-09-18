@@ -11,3 +11,10 @@ abstract class BaseUseCase{
    */
   void destroy();
 }
+abstract class BaseViews{
+  /**
+   * holds Navigate.pop() to close page
+   * delay int milliseconds
+   */
+  void closePage({int delay = 0});
+}

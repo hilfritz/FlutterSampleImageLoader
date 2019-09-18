@@ -1,4 +1,5 @@
 
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -9,7 +10,7 @@ import 'package:imageloader_sample/utils/DisplayElemants.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:spring_button/spring_button.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'MainPresenter.dart';
 
 void main() {
@@ -53,6 +54,8 @@ class MyHomePage extends StatefulWidget  {
 }
 
 class _MyHomePageState extends State<MyHomePage> implements MainView {
+  @override
+  bool enableBack = false;
   bool permissionGranted = false;
   @override
   List<Uint8List> images = new List<Uint8List>();
@@ -79,18 +82,35 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
     }
   }
 
+  Future<bool> getEnabledBack(){
+    var completer = new Completer();
+
+    // At some time you need to complete the future:
+    completer.complete(enableBack);
+    //Future<String>.value("");
+    Future<bool>.value(enableBack);
+    return completer.future;
+  }
+
   @override
   Widget build(BuildContext context) {
     DisplayElements.init(context);
     //ASK THE CORRECT PERMISSIONS FIRST
     askPermissions();
-    return Scaffold(
-          appBar: AppBar(
-            title: Text(widget.title),
-          ),
-          body: getBody(),
-          // This trailing comma makes auto-formatting nicer for build methods.
-        );
+    return new WillPopScope(
+      onWillPop: () async{
+        this.mainPresenter.onBackButtonTap();
+        return new Future<bool>.value(enableBack);
+      } ,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: getBody(),
+        // This trailing comma makes auto-formatting nicer for build methods.
+      )
+    );
+
   }
 
   Widget requestPermissionBody(){
@@ -174,7 +194,6 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
     if (this.images.length==0){
       return getInstructionsWidget();
     }
-    var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return GestureDetector(
            onLongPress: () {
             this.mainPresenter.onTap();
@@ -298,6 +317,26 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
     });    
   }
 
+  @override
+  void showToast(String str) {
+    Fluttertoast.showToast(
+        msg: str,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIos: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0
+    );
+  }
+
+  @override
+  void closePage({int delay = 0}) {
+    Future.delayed(const Duration(milliseconds: 500), () {
+      //SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+      Navigator.pop(context, true);
+    });
+  }
 }
 
 class InstructionTextWidget extends StatelessWidget {

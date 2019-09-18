@@ -1,6 +1,8 @@
 import 'package:imageloader_sample/managers/DownloadManager.dart';
 import 'package:imageloader_sample/managers/FileManager.dart';
 import 'package:imageloader_sample/managers/Logger.dart';
+import 'package:imageloader_sample/pages/main/CloseAppUseCase.dart';
+import '../Base.dart';
 import 'ImageLoadingUseCase.dart';
 /**
  * @author Hilfritz Camallere
@@ -11,7 +13,7 @@ enum PAGE_STATE {
   loading,
   list
 }
-abstract class MainPresenter implements  ImageLoadingUseCasePresenter{
+abstract class MainPresenter implements  ImageLoadingUseCasePresenter, CloseAppPresenter{
   PAGE_STATE pageState;
   MainView view;
   Logger logger;
@@ -23,7 +25,7 @@ abstract class MainPresenter implements  ImageLoadingUseCasePresenter{
   void onTap();
   void onTapAndHold();
 }
-abstract class MainView implements ImageLoadingUseCaseView{
+abstract class MainView implements ImageLoadingUseCaseView, CloseAppUseCaseView{
 }
 class MainPresenterImpl implements MainPresenter{
   String TAG = "MainPresenterImpl";
@@ -33,11 +35,14 @@ class MainPresenterImpl implements MainPresenter{
   @override DownloadManager downloadManager;
   FileManager fileManager;
   ImageLoadingUseCase imageLoadingUseCase;
+  CloseAppUseCase closeAppUseCase;
   void initView(MainView v){
     view = v;
     //INITIALIZE USECASES
     imageLoadingUseCase = new ImageLoadingUseCaseImpl();
     imageLoadingUseCase.init(this, fileManager, downloadManager, logger,view);
+    closeAppUseCase = new CloseAppUseCaseImpl();
+    closeAppUseCase.init(this, view);
   }
   @override
   void init(FileManager fm, DownloadManager dm, Logger lg) {
@@ -66,7 +71,13 @@ class MainPresenterImpl implements MainPresenter{
 
   @override
   void destroy() {
-    //CALL ALL DESTROY FOR ALL USECASES
+    //CALL DESTROY FOR ALL USECASES
     imageLoadingUseCase?.destroy();
+    closeAppUseCase?.destroy();
+  }
+
+  @override
+  void onBackButtonTap() {
+    closeAppUseCase.run();
   }
 }
