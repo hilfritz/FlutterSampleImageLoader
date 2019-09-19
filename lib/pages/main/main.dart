@@ -73,8 +73,9 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
   Widget freeSpageSmall = Container(padding: EdgeInsets.all(5),);
 
   void askPermissions() async{
-    //Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+    Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions([PermissionGroup.storage]);
     PermissionStatus permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
+    //WRITE_EXTERNAL_STORAGE
     if (permission==PermissionStatus.granted){
       setState(() {
         permissionGranted = true;
