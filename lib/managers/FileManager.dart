@@ -10,7 +10,8 @@ abstract class FileManager{
   String basePath = "";
   Future<void> init();
   Future<File> createFileFromBasePath(String filename);
-  Future<bool> downloadFile(String urlLink, File destinationFile);
+  //Future<bool> downloadFile(String urlLink, File destinationFile);
+  Future<File> downloadFile(String urlLink, File destinationFile);
 }
 class FileManagerImpl implements FileManager{
   String basePath = "";
@@ -34,9 +35,26 @@ class FileManagerImpl implements FileManager{
     return completer.future;
   }
 
+//  @override
+//  Future<bool> downloadFile(String urlLink, File destinationFile) async{
+//    bool retVal = false;
+//    Uint8List buffer = await http.readBytes(urlLink);
+//    RandomAccessFile rf = destinationFile.openSync(mode: FileMode.write);
+//    rf.writeFromSync(buffer);
+//    rf.flushSync();
+//    rf.closeSync();
+//    if (destinationFile != null) {
+//      int length = await destinationFile.length();
+//      if (length > 10) {
+//        return true;
+//      }
+//    }
+//    return retVal;
+//  }
+
   @override
-  Future<bool> downloadFile(String urlLink, File destinationFile) async{
-    bool retVal = false;
+  Future<File> downloadFile(String urlLink, File destinationFile) async{
+    File retVal = null;
     Uint8List buffer = await http.readBytes(urlLink);
     RandomAccessFile rf = destinationFile.openSync(mode: FileMode.write);
     rf.writeFromSync(buffer);
@@ -45,10 +63,10 @@ class FileManagerImpl implements FileManager{
     if (destinationFile != null) {
       int length = await destinationFile.length();
       if (length > 10) {
-        return true;
+        retVal = destinationFile;
+        return retVal;
       }
     }
-
     return retVal;
   }
 }

@@ -76,26 +76,43 @@ class ImageLoadingUseCaseImpl
     lastRun = new DateTime.now();
     logger.logg("run: ");
     view.clearImages();
+    await Future.delayed(const Duration(milliseconds: 1500));
     //DOWNLOAD THE IMAGES
-    Future.delayed(const Duration(milliseconds: 1500), () async{
-      for (int x = 0; x < NUMBER_OF_IMAGES; x++) {
-        String currentTimestamp =
-            new DateTime.now().millisecondsSinceEpoch.toString();
-        String fileNameWithExtension =
-            currentTimestamp + "_" + x.toString() + ".png";
-        String url = "https://picsum.photos/600/800";
-        String taskId = "";
-        File file = File(fileManager.basePath + "/" + fileNameWithExtension);
-        taskId = await downloadManager.addTaskForConcurrentDownload(
-            url,
-            fileManager.basePath + "/",
-            fileNameWithExtension,
-            false,
-            false,
-            file,
-            false);
-      }
-    });
+    for (int x = 0; x < NUMBER_OF_IMAGES; x++) {
+      String currentTimestamp =
+      new DateTime.now().millisecondsSinceEpoch.toString();
+      String fileNameWithExtension =
+          currentTimestamp + "_" + x.toString() + ".png";
+      String url = "https://picsum.photos/600/800";
+      String taskId = "";
+      File file = File(fileManager.basePath + "/" + fileNameWithExtension);
+      taskId = await downloadManager.addTaskForConcurrentDownload(
+          url,
+          fileManager.basePath + "/",
+          fileNameWithExtension,
+          false,
+          false,
+          file,
+          false);
+    }
+
+//    await Future.delayed(const Duration(milliseconds: 1500));
+//    for (int x = 0; x < NUMBER_OF_IMAGES; x++) {
+//      String currentTimestamp =
+//      new DateTime.now().millisecondsSinceEpoch.toString();
+//      String fileNameWithExtension =
+//          currentTimestamp + "_" + x.toString() + ".png";
+//      String url = "https://picsum.photos/600/800";
+//      String taskId = "";
+//      File file = File(fileManager.basePath + "/" + fileNameWithExtension);
+//      File downloadedFile = await fileManager.downloadFile(url, file);
+//      if (downloadedFile!=null && downloadedFile.existsSync()){
+//        Uint8List readFileByte = await _readFileByte(downloadedFile.path);
+//        view.addImageToDisplay(readFileByte);
+//      }else{
+//
+//      }
+//    }
   }
 
   @override
