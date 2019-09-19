@@ -7,7 +7,7 @@ abstract class CloseAppPresenter implements BasePresenter{
 }
 
 abstract class CloseAppUseCaseView implements BaseViews{
-  bool enableBack =  false; //by default is false, override back button
+  bool goBack =  false; //by default is false, override back button
   void showToast(String str);
 }
 
@@ -34,15 +34,13 @@ class CloseAppUseCaseImpl implements CloseAppUseCase{
     int now = new DateTime.now().millisecondsSinceEpoch;
     int difference = now - lastTap;
     //view.setEnableBack(false);
-    view.enableBack = false;
+    view.goBack = false;
     if (lastTap==0){
       view.showToast("Press back again to exit app. ");
     }else{
       if (difference < 1500){
-        view.showToast("Goodbye... ");
-        view.enableBack = true;
-        //view.setEnableBack(true);
-        view.closePage(delay: 500);
+        view.goBack = true;
+        //view.closePage(delay: 3000);
       }else{
         view.showToast("Press back again to exit app. ");
       }

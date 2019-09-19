@@ -55,7 +55,7 @@ class MyHomePage extends StatefulWidget  {
 
 class _MyHomePageState extends State<MyHomePage> implements MainView {
   @override
-  bool enableBack = false;
+  bool goBack = false;
   bool permissionGranted = false;
   @override
   List<Uint8List> images = new List<Uint8List>();
@@ -82,16 +82,6 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
     }
   }
 
-  Future<bool> getEnabledBack(){
-    var completer = new Completer();
-
-    // At some time you need to complete the future:
-    completer.complete(enableBack);
-    //Future<String>.value("");
-    Future<bool>.value(enableBack);
-    return completer.future;
-  }
-
   @override
   Widget build(BuildContext context) {
     DisplayElements.init(context);
@@ -100,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
     return new WillPopScope(
       onWillPop: () async{
         this.mainPresenter.onBackButtonTap();
-        return new Future<bool>.value(enableBack);
+        return new Future<bool>.value(goBack);
       } ,
       child: Scaffold(
         appBar: AppBar(
@@ -322,20 +312,17 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
     Fluttertoast.showToast(
         msg: str,
         toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
+        gravity: ToastGravity.BOTTOM,
         timeInSecForIos: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
+        backgroundColor: Colors.black12,
+        textColor: Colors.lightBlueAccent,
         fontSize: 16.0
     );
   }
 
   @override
-  void closePage({int delay = 0}) {
-    Future.delayed(const Duration(milliseconds: 500), () {
-      //SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-      Navigator.pop(context, true);
-    });
+  void closePage({int delay = 0}) async {
+    Navigator.canPop(context);
   }
 }
 
