@@ -2,7 +2,7 @@ import 'package:imageloader_sample/components/PresenterComponent.dart';
 import 'package:imageloader_sample/managers/DownloadManager.dart';
 import 'package:imageloader_sample/managers/FileManager.dart';
 import 'package:imageloader_sample/managers/Logger.dart';
-import 'package:imageloader_sample/managers/NavigationManager.dart';
+import 'package:imageloader_sample/managers/Router.dart';
 /**
  * Singleton object for the app runtime
  * - THIS IS WHERE PRESENTERS, MODELS ARE INITIALIZED
@@ -19,7 +19,7 @@ class SessionComponent {
   PresenterComponent presenterComponent;
   DownloadManager downloadManager;
   FileManager fileManager;
-  NavigationManager navigationManager;
+  Router navigationManager;
 
   Future<void> init() async{
     _logger = new LoggerImpl();
@@ -28,7 +28,7 @@ class SessionComponent {
     downloadManager = new DownloadManagerImpl();
     presenterComponent = new PresenterComponentImpl();
     presenterComponent.init(_logger, downloadManager, fileManager);
-    navigationManager = new NavigationManagerImpl();
+    navigationManager = new RouterImpl();
     navigationManager.init(presenterComponent);
   }
 }

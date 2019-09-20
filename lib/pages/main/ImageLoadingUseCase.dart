@@ -127,7 +127,7 @@ class ImageLoadingUseCaseImpl
     Uint8List bytes;
     await audioFile.readAsBytes().then((value) {
       bytes = Uint8List.fromList(value); 
-      print('reading of bytes is completed');
+      //print('reading of bytes is completed');
     }).catchError((onError) {
       print('Exception Error while reading audio from path:' +
       onError.toString());

@@ -54,7 +54,7 @@ class DownloadManagerImpl implements DownloadManager{
       openFileFromNotification,
       file, exist
     );
-    print("addTaskForConcurrentDownload: taskId: $taskId");
+    print("addTaskForConcurrentDownload: taskId: $taskId url:$url");
     //Add task ID to task pool
     downloadTasksList.add(DownloadTaskInfo(taskId, pathToSave+fileName, file, exist));
     //add file callback when download finishes
@@ -63,8 +63,11 @@ class DownloadManagerImpl implements DownloadManager{
           DownloadTaskInfo downloadTaskInfo = getDownloadTaskInfoById(id);
           int index = getTaskIndex(id);
           downloadTasksList.removeAt(index);
-          print("addTaskForConcurrentDownload: registerCallback id: $id download complete path:"+downloadTaskInfo.path);
+          //print("addTaskForConcurrentDownload: registerCallback id: $id download complete path:"+downloadTaskInfo.path);
+          print("addTaskForConcurrentDownload: taskId: $id [success-download] path:"+downloadTaskInfo.path);
           this.downloadCallback.onFileDownLoaded(DownloadTaskInfo(id, downloadTaskInfo.path, File(downloadTaskInfo.path), true), status);
+        }else{
+
         }
       });
       return taskId;
