@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:imageloader_sample/components/SessionComponent.dart';
+import 'package:imageloader_sample/pages/typewriter/typewriter_page.dart';
 import 'package:imageloader_sample/utils/DisplayElemants.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:spring_button/spring_button.dart';
@@ -21,30 +22,34 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     this.mainPresenter = this.sessionComponent.presenterComponent.mainPresenter;
+    this.mainPresenter.router.initContext(context);
 
     return MaterialApp(
       title: 'Amazing Photos',
+      navigatorKey: this.mainPresenter.router.getNavigatorKey(),
+      initialRoute: "/",
+      onGenerateRoute: this.sessionComponent.navigationManager.generateRoute(),
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage('Amazing Photos', this.mainPresenter),
+      home: HomePageStatefulWidget('Amazing Photos', this.mainPresenter),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget  {
+class HomePageStatefulWidget extends StatefulWidget  {
   final MainPresenter mainPresenter;
   final String title;
-  MyHomePage(this.title, this.mainPresenter);
+  HomePageStatefulWidget(this.title, this.mainPresenter);
 
   @override
-  _MyHomePageState createState() {
+  _MainPageStatefulWidgetState createState() {
 
-    return _MyHomePageState(this.mainPresenter);
+    return _MainPageStatefulWidgetState(this.mainPresenter);
   }
 }
 
-class _MyHomePageState extends State<MyHomePage> implements MainView {
+class _MainPageStatefulWidgetState extends State<HomePageStatefulWidget> implements MainView {
   @override
   bool goBack = false;
   bool permissionGranted = false;
@@ -52,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> implements MainView {
   List<Uint8List> images = new List<Uint8List>();
   final MainPresenter mainPresenter;
   bool isTapped = false;
-  _MyHomePageState(this.mainPresenter);
+  _MainPageStatefulWidgetState(this.mainPresenter);
 
   @override
   void initState() {

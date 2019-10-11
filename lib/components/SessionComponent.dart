@@ -27,8 +27,11 @@ class SessionComponent {
     await fileManager.init();
     downloadManager = new DownloadManagerImpl();
     presenterComponent = new PresenterComponentImpl();
-    presenterComponent.init(_logger, downloadManager, fileManager);
+
     navigationManager = new RouterImpl();
     navigationManager.init(presenterComponent);
+
+
+    presenterComponent.init(_logger, downloadManager, fileManager, navigationManager);
   }
 }

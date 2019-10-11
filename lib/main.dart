@@ -7,6 +7,7 @@ void main() {
   //INITIALIZE SINGLETON SESSION
   SessionComponent sessionComponent = new SessionComponent();
   sessionComponent.init().then((x){
+    //runApp(MainPage(sessionComponent));
     runApp(MainPage(sessionComponent));
   });
 }

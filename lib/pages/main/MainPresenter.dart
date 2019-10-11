@@ -1,9 +1,10 @@
 import 'package:imageloader_sample/managers/DownloadManager.dart';
 import 'package:imageloader_sample/managers/FileManager.dart';
 import 'package:imageloader_sample/managers/Logger.dart';
-import 'package:imageloader_sample/pages/main/CloseAppUseCase.dart';
+import 'package:imageloader_sample/managers/Router.dart';
+import 'package:imageloader_sample/pages/main/usecases/CloseAppUseCase.dart';
 import '../Base.dart';
-import 'ImageLoadingUseCase.dart';
+import 'usecases/ImageLoadingUseCase.dart';
 /**
  * @author Hilfritz Camallere
  */
@@ -19,7 +20,8 @@ abstract class MainPresenter implements  ImageLoadingUseCasePresenter, CloseAppP
   Logger logger;
   DownloadManager downloadManager;
   FileManager fileManager;
-  void init(FileManager fm, DownloadManager dm, Logger lg);
+  Router router;
+  void init(FileManager fm, DownloadManager dm, Logger lg, Router router);
   void initView(MainView v);
   void populate();
   void onTap();
@@ -33,6 +35,7 @@ class MainPresenterImpl implements MainPresenter{
   @override Logger logger;
   @override MainView view;
   @override DownloadManager downloadManager;
+  @override Router router;
   FileManager fileManager;
   ImageLoadingUseCase imageLoadingUseCase;
   CloseAppUseCase closeAppUseCase;
@@ -45,13 +48,14 @@ class MainPresenterImpl implements MainPresenter{
     closeAppUseCase.init(this, view);
   }
   @override
-  void init(FileManager fm, DownloadManager dm, Logger lg) {
+  void init(FileManager fm, DownloadManager dm, Logger lg, Router rt) {
     //INITIALIZE VARIABLES
     downloadManager = dm;
     fileManager = fm;
     logger = lg;
     logger.start(TAG);
     logger.logg("init");
+    router = rt;
   }
 
   @override
@@ -61,7 +65,8 @@ class MainPresenterImpl implements MainPresenter{
 
   @override
   void onTap() {
-    populate();
+    router.openTypeWriterPage();
+    //populate();
   }
 
   @override

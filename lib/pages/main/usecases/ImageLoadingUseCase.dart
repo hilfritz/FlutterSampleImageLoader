@@ -10,8 +10,8 @@ import 'package:imageloader_sample/managers/DownloadManager.dart';
 import 'package:imageloader_sample/managers/FileManager.dart';
 import 'package:imageloader_sample/managers/Logger.dart';
 
-import '../Base.dart';
-import 'MainPresenter.dart';
+import '../../Base.dart';
+import '../MainPresenter.dart';
 
 abstract class ImageLoadingUseCase implements BaseUseCase{
   int NUMBER_OF_IMAGES = 0;
