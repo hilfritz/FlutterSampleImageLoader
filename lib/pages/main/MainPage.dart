@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:imageloader_sample/components/SessionComponent.dart';
+import 'package:imageloader_sample/managers/Router.dart';
 import 'package:imageloader_sample/pages/typewriter/typewriter_page.dart';
 import 'package:imageloader_sample/utils/DisplayElemants.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -27,8 +28,11 @@ class MainPage extends StatelessWidget {
     return MaterialApp(
       title: 'Amazing Photos',
       navigatorKey: this.mainPresenter.router.getNavigatorKey(),
-      initialRoute: "/",
-      onGenerateRoute: this.sessionComponent.navigationManager.generateRoute(),
+      initialRoute: ROUTE_NAMES.MAIN,
+      onGenerateRoute: (RouteSettings routeSettings){
+        return this.sessionComponent.routeManager.generateRoute(routeSettings);
+      } ,
+
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -182,6 +186,9 @@ class _MainPageStatefulWidgetState extends State<HomePageStatefulWidget> impleme
       return getInstructionsWidget();
     }
     return GestureDetector(
+          onTap: (){
+
+          },
            onLongPress: () {
             this.mainPresenter.onTap();
           },

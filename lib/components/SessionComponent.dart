@@ -19,7 +19,7 @@ class SessionComponent {
   PresenterComponent presenterComponent;
   DownloadManager downloadManager;
   FileManager fileManager;
-  Router navigationManager;
+  Router routeManager;
 
   Future<void> init() async{
     _logger = new LoggerImpl();
@@ -28,10 +28,10 @@ class SessionComponent {
     downloadManager = new DownloadManagerImpl();
     presenterComponent = new PresenterComponentImpl();
 
-    navigationManager = new RouterImpl();
-    navigationManager.init(presenterComponent);
+    routeManager = new RouterImpl();
+    routeManager.init(presenterComponent);
 
 
-    presenterComponent.init(_logger, downloadManager, fileManager, navigationManager);
+    presenterComponent.init(_logger, downloadManager, fileManager, routeManager);
   }
 }

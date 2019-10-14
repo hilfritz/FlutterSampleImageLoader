@@ -15,8 +15,6 @@ abstract class Router implements TypeWriterRouter{
 
   void openIncrementDecrementPage();
   void openImageDetailPage();
-
-  Map<String, dynamic > generateRoutes(BuildContext context);
   Route<dynamic> generateRoute(RouteSettings settings);
 }
 /**
@@ -25,7 +23,15 @@ abstract class Router implements TypeWriterRouter{
  * https://medium.com/flutter-community/navigate-without-context-in-flutter-with-a-navigation-service-e6d76e880c1c
  */
 
+class ROUTE_NAMES{
+  static const String MAIN = "/";
+  static const String TYPEWRITER = "/typewriter";
+  static const String ABOUT = "/about";
+}
+
 class RouterImpl implements Router{
+
+
   BuildContext context;
   @override
   PresenterComponent presenterComponent;
@@ -48,7 +54,7 @@ class RouterImpl implements Router{
 
   @override
   void openTypeWriterPage() {
-    navigatorKey.currentState.pushNamed("/typewriter");
+    navigatorKey.currentState.pushNamed(ROUTE_NAMES.TYPEWRITER);
   }
 
   @override
@@ -62,20 +68,14 @@ class RouterImpl implements Router{
   }
 
   @override
-  Map<String, dynamic> generateRoutes(BuildContext context) {
-
-    var typeWriterPageStatefulWidget = new TypeWriterPageStatefulWidget("TypeWriter", this.presenterComponent.typeWriterPresenter);
-
-      return {
-        "/typewriter":(context) => new TypeWriterPageStatefulWidget("TypeWriter", this.presenterComponent.typeWriterPresenter)
-      };
-
-  }
-
   Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case '/typewriter':
-        return MaterialPageRoute(builder: (context) => new TypeWriterPageStatefulWidget("TypeWriter", this.presenterComponent.typeWriterPresenter));
+
+      case ROUTE_NAMES.TYPEWRITER:
+        return MaterialPageRoute(builder: (context) {
+          var typeWriterPageStatefulWidget = new TypeWriterPage("TypeWriter", this.presenterComponent.typeWriterPresenter);
+          return typeWriterPageStatefulWidget;
+        });
     }
   }
 }

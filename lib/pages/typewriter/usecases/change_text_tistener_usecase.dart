@@ -1,4 +1,5 @@
 import 'package:imageloader_sample/pages/Base.dart';
+import 'package:rxdart/rxdart.dart';
 
 abstract class ChangeTextListenerUseCase implements BaseUseCase{
   void init(ChangeTextListenerPresenter presenter, ChangeTextListenerView view);
@@ -14,7 +15,7 @@ abstract class ChangeTextListenerPresenter implements BasePresenter{
 }
 
 abstract class ChangeTextListenerView implements BaseViews{
-  String inputText = "";
+  PublishSubject<String> inputTextPublishSubject;
   void initBlocs();
 
 
@@ -24,33 +25,35 @@ abstract class ChangeTextListenerView implements BaseViews{
 class ChangeTextListenerUseCaseImpl implements ChangeTextListenerUseCase{
   ChangeTextListenerPresenter presenter;
   ChangeTextListenerView view;
-
+  String inputText = "";
   @override
   void destroy() {
-
+    this.view.inputTextPublishSubject?.close();
   }
 
   @override
   void init(ChangeTextListenerPresenter presenter, ChangeTextListenerView view) {
     this.presenter = presenter;
     this.view = view;
+    //INIT STREAMS
+    this.view.inputTextPublishSubject = new PublishSubject<String>();
   }
 
   @override
   void run() {
     view.initBlocs();
-
-
   }
 
   @override
   void onTextChanged(String str) {
-    this.view.inputText = this.view.inputText+" "+str;
+    this.inputText = this.inputText+" "+str+"\n";
+    this.view.inputTextPublishSubject.add(this.inputText);
   }
 
   @override
   void clearText() {
-    this.view.inputText = "";
+    this.inputText = "";
+    this.view.inputTextPublishSubject.add(" ");
   }
 
 }
