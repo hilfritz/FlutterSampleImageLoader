@@ -27,6 +27,7 @@ abstract class ImageLoadingUseCase implements BaseUseCase{
 }
 abstract class ImageLoadingUseCasePresenter implements BasePresenter{}
 abstract class ImageLoadingUseCaseView{
+  PublishSubject<Uint8List> imagePublishSubject;
   void showErrorPopup(String str);
   void addImageToDisplay(Uint8List files);
   void clearImages();
@@ -44,7 +45,6 @@ class ImageLoadingUseCaseImpl
   FileManager fileManager;
   Logger logger;
   String TAG = "ImageLoadingUseCaseImpl";
-  List<DownloadTaskInfo> list = new List<DownloadTaskInfo>();
   DateTime lastRun;
   DownloadManager downloadManager;
   @override int NUMBER_OF_IMAGES = 4;
@@ -63,10 +63,14 @@ class ImageLoadingUseCaseImpl
     downloadManager.init(this);
     logger.start(TAG);
     logger.logg("init:");
+
   }
 
   @override
   void run() async {
+    if (this.view.imagePublishSubject!=null){
+      this.view.imagePublishSubject = new PublishSubject<Uint8List>();
+    }
     int currentMilli = new DateTime.now().millisecondsSinceEpoch;
     if (lastRun != null &&
         (currentMilli - lastRun.millisecondsSinceEpoch) < 3000) {

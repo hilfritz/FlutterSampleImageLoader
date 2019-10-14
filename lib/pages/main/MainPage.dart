@@ -10,6 +10,7 @@ import 'package:imageloader_sample/managers/Router.dart';
 import 'package:imageloader_sample/pages/typewriter/typewriter_page.dart';
 import 'package:imageloader_sample/utils/DisplayElemants.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:rxdart/src/subjects/publish_subject.dart';
 import 'package:spring_button/spring_button.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -57,12 +58,13 @@ class _MainPageStatefulWidgetState extends State<HomePageStatefulWidget> impleme
   @override
   bool goBack = false;
   bool permissionGranted = false;
-  @override
   List<Uint8List> images = new List<Uint8List>();
   final MainPresenter mainPresenter;
   bool isTapped = false;
   _MainPageStatefulWidgetState(this.mainPresenter);
   List<Choice> choices = new List<Choice>();
+  @override
+  PublishSubject<Uint8List> imagePublishSubject;
   @override
   void initState() {
     super.initState();
@@ -209,6 +211,20 @@ class _MainPageStatefulWidgetState extends State<HomePageStatefulWidget> impleme
     );
   }
 
+  Widget getBodyFromStream(){
+    var x = StreamBuilder<Uint8List> (
+      stream: imagePublishSubject,
+      builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot){
+        if (snapshot.hasData==false){
+          return getInstructionsWidget();
+        }else{
+
+        }
+      },
+    );
+
+  }
+
   Widget getBody() {
     if (this.images.length==0){
       return getInstructionsWidget();
@@ -311,6 +327,8 @@ class _MainPageStatefulWidgetState extends State<HomePageStatefulWidget> impleme
     list.add(Container());
     return list;
   }
+
+
   @override
   bool isLoadingAnimationHidden;
 
@@ -356,6 +374,8 @@ class _MainPageStatefulWidgetState extends State<HomePageStatefulWidget> impleme
   void closePage({int delay = 0}) async {
     Navigator.canPop(context);
   }
+
+
 }
 
 class Choice {

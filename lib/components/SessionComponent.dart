@@ -29,9 +29,7 @@ class SessionComponent {
     presenterComponent = new PresenterComponentImpl();
 
     routeManager = new RouterImpl();
-    routeManager.init(presenterComponent);
-
-
     presenterComponent.init(_logger, downloadManager, fileManager, routeManager);
+    routeManager.init(presenterComponent);
   }
 }

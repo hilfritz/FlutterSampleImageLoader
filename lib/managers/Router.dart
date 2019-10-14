@@ -42,7 +42,7 @@ class RouterImpl implements Router{
   @override
   void init(PresenterComponent presenterComponent) {
     this.presenterComponent = presenterComponent;
-
+    typeWriterPage = new TypeWriterPage("TypeWriter", this.presenterComponent.typeWriterPresenter);
   }
 
   @override
@@ -76,9 +76,6 @@ class RouterImpl implements Router{
 
       case ROUTE_NAMES.TYPEWRITER:
         return MaterialPageRoute(builder: (context) {
-          if (typeWriterPage==null){
-            typeWriterPage = new TypeWriterPage("TypeWriter", this.presenterComponent.typeWriterPresenter);
-          }
           return typeWriterPage;
         });
     }
