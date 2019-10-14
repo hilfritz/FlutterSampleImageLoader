@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:imageloader_sample/pages/main/MainPage.dart';
 import 'package:imageloader_sample/pages/typewriter/typewriter_presenter.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -53,80 +54,71 @@ class _TypeWriterPageStatefulWidget extends State<TypeWriterPage> implements Typ
     return MaterialApp(
 
       home: Scaffold(
-        appBar: AppBar(title: Text("Type Writer")),
+        appBar: AppBar(title: Text("TypeWriter")),
 
         body: new GestureDetector(
           onTap: (){
             hideKeyboard(context);
           },
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
+          child:
+            Stack(
             children: <Widget>[
-              Expanded(
-                flex: 3,
-                child: Stack(
-                    children: <Widget>[
-                      Container(
-                        color: Colors.white70,
-                      ),
-                      inputtedTextWidget==null?Container():inputtedTextWidget
-                    ]),
+              Container(
+                color: Colors.black,
               ),
-              Expanded(
-                flex: 1,
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Card(
-                        child: TextField(
-                          decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Enter text to add',
-                              contentPadding: const EdgeInsets.all(20.0)
-                          ),
-                          controller: textEditingController,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Expanded(
+                    flex: 3,
+                    child: inputtedTextWidget==null?Container():inputtedTextWidget,
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Card(
+                            child: TextField(
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Enter text to add',
+                                  contentPadding: const EdgeInsets.all(20.0)
+                              ),
+                              controller: textEditingController,
 //                    onChanged: (s){
 //                      return presenter.onTextChanged(s);
 //                    },
-                        ),
-                      )
-                      ,
-                    )
-                    , Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        FlatButton(
-                          onPressed: () {
-                            String temp = textEditingController.text+"";
-                            textEditingController.text = "";
-                            presenter.onTextChanged(temp);
-                          },
-                          child: Text(
-                              "ADD",
-                              style: new TextStyle(
-                                fontSize: 30.0,
-                                color: Colors.black,
-                              )
-                          ),
-                        ),
-                        FlatButton(
-                          onPressed: () {
-                            presenter.clearText();
-                          },
-                          child: Text(
-                              "RESET",
-                              style: new TextStyle(
-                                fontSize: 30.0,
-                                color: Colors.grey,
-                              )
-                          ),
+                            ),
+                          )
+                          ,
                         )
+                        , Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            FlatButton(
+                              onPressed: () {
+                                String temp = textEditingController.text+"";
+                                textEditingController.text = "";
+                                presenter.onTextChanged(temp);
+                              },
+                              child: InstructionTextWidget("Add", false),
+                            ),
+                            FlatButton(
+                              onPressed: () {
+                                presenter.clearText();
+                              },
+                              child: InstructionTextWidget("Reset", false, color: Colors.grey),
+
+                            )
+                          ],
+                        ),
                       ],
                     ),
-                  ],
-                ),
+                  )
+                ],
               )
             ],
           ),
@@ -158,7 +150,7 @@ class _TypeWriterPageStatefulWidget extends State<TypeWriterPage> implements Typ
             child: Text(snapshot.data,
                 style: new TextStyle(
                   fontSize: 30.0,
-                  color: Colors.black,
+                  color: Colors.white,
                 )
             ),
           ),

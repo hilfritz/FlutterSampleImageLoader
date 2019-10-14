@@ -62,15 +62,20 @@ class _MainPageStatefulWidgetState extends State<HomePageStatefulWidget> impleme
   final MainPresenter mainPresenter;
   bool isTapped = false;
   _MainPageStatefulWidgetState(this.mainPresenter);
-
+  List<Choice> choices = new List<Choice>();
   @override
   void initState() {
     super.initState();
+    choices.add(new Choice(title:"Typewriter"));
+    choices.add(new Choice(title:"About"));
     this.mainPresenter.initView(this);
   }
 
   Widget freeSpace = Container(padding: EdgeInsets.all(10),);
   Widget freeSpageSmall = Container(padding: EdgeInsets.all(5),);
+
+
+
 
   void askPermissions() async{
     Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions([PermissionGroup.storage]);
@@ -82,6 +87,8 @@ class _MainPageStatefulWidgetState extends State<HomePageStatefulWidget> impleme
       });      
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -96,22 +103,27 @@ class _MainPageStatefulWidgetState extends State<HomePageStatefulWidget> impleme
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
+
           actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.add_alert),
-              tooltip: "Type writer",
-              onPressed: () {
-                this.widget.mainPresenter.router.openTypeWriterPage();
+            PopupMenuButton<Choice>(
+              onSelected: (Choice choice){
+                if (choice.title==choices[0].title){
+                  this.widget.mainPresenter.router.openTypeWriterPage();
+                }else if (choice.title==choices[1].title){
+
+                }
               },
-            ),
-            IconButton(
-              icon: const Icon(Icons.navigate_next),
-              tooltip: 'About',
-              onPressed: () {
-                //openPage(context);
+              itemBuilder: (BuildContext context) {
+                return choices.skip(0).map((Choice choice) {
+                  return PopupMenuItem<Choice>(
+                    value: choice,
+                    child: Text(choice.title),
+                  );
+                }).toList();
               },
             ),
           ],
+
         ),
         body: getBody(),
         // This trailing comma makes auto-formatting nicer for build methods.
@@ -346,10 +358,17 @@ class _MainPageStatefulWidgetState extends State<HomePageStatefulWidget> impleme
   }
 }
 
+class Choice {
+  const Choice({this.title});
+
+  final String title;
+}
+
 class InstructionTextWidget extends StatelessWidget {
   String text = "";
   bool repeatAnimation = false;
-  InstructionTextWidget(this.text, this.repeatAnimation);
+  Color color;
+  InstructionTextWidget(this.text, this.repeatAnimation, {this.color = Colors.lightBlueAccent});
   @override
   Widget build(BuildContext context) {
     Widget retVal = Center(
@@ -358,7 +377,7 @@ class InstructionTextWidget extends StatelessWidget {
               isRepeatingAnimation: repeatAnimation,            
               textStyle: TextStyle(fontWeight: FontWeight.w400,
                 fontSize: 25,
-                color: Colors.lightBlueAccent,
+                color: color,
 
               ),
               textAlign: TextAlign.center, text: [text],
