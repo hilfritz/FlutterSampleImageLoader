@@ -17,7 +17,7 @@ abstract class ChangeTextListenerPresenter implements BasePresenter{
 abstract class ChangeTextListenerView implements BaseViews{
   PublishSubject<String> inputTextPublishSubject;
   void initBlocs();
-
+  void scrollToBottom();
 
 }
 
@@ -48,6 +48,7 @@ class ChangeTextListenerUseCaseImpl implements ChangeTextListenerUseCase{
   void onTextChanged(String str) {
     this.inputText = this.inputText+" "+str+"\n";
     this.view.inputTextPublishSubject.add(this.inputText);
+    this.view.scrollToBottom();
   }
 
   @override

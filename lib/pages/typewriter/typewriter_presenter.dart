@@ -7,12 +7,11 @@ abstract class TypeWriterPresenter implements  ChangeTextListenerPresenter{
   void populate();
 }
 abstract class TypeWriterView implements ChangeTextListenerView{
-
-
 }
 
 abstract class TypeWriterRouter{
   void openTypeWriterPage();
+  void closePage();
 }
 
 class TypeWriterPresenterImpl implements TypeWriterPresenter{

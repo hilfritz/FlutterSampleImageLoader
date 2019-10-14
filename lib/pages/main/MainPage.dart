@@ -96,6 +96,22 @@ class _MainPageStatefulWidgetState extends State<HomePageStatefulWidget> impleme
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.add_alert),
+              tooltip: "Type writer",
+              onPressed: () {
+                this.widget.mainPresenter.router.openTypeWriterPage();
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.navigate_next),
+              tooltip: 'About',
+              onPressed: () {
+                //openPage(context);
+              },
+            ),
+          ],
         ),
         body: getBody(),
         // This trailing comma makes auto-formatting nicer for build methods.

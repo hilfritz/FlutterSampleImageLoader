@@ -19,23 +19,33 @@ class _TypeWriterPageStatefulWidget extends State<TypeWriterPage> implements Typ
 
   final TypeWriterPresenter presenter;
   TextEditingController textEditingController = new TextEditingController();
-  TextEditingController displayTextController = new TextEditingController();
-
   @override
   PublishSubject<String> inputTextPublishSubject;
-
   var inputtedTextWidget;
-
   int counter=0;
+  ScrollController _scrollController;
 
   _TypeWriterPageStatefulWidget(this.presenter);
   @override
   void initState() {
-    this.presenter?.initView(this);
-    this.presenter?.populate();
+    this.presenter.initView(this);
+    this.presenter.populate();
     super.initState();
   }
 
+  void hideKeyboard(BuildContext context){
+    FocusScope.of(context).requestFocus(new FocusNode());
+  }
+  void scrollToBottom(){
+    var scrollPosition = _scrollController.position;
+    if (scrollPosition.viewportDimension < scrollPosition.maxScrollExtent) {
+      _scrollController.animateTo(
+        scrollPosition.maxScrollExtent,
+        duration: new Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,54 +55,81 @@ class _TypeWriterPageStatefulWidget extends State<TypeWriterPage> implements Typ
       home: Scaffold(
         appBar: AppBar(title: Text("Type Writer")),
 
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-
-            Expanded(
-              flex: 3,
-              child: inputtedTextWidget==null?Container():inputtedTextWidget),
-            Expanded(
-              flex: 1,
-              child: Column(
-                children: <Widget>[
-                  TextField(
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Enter text to add'
-                    ),
-                    controller: textEditingController,
+        body: new GestureDetector(
+          onTap: (){
+            hideKeyboard(context);
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Expanded(
+                flex: 3,
+                child: Stack(
+                    children: <Widget>[
+                      Container(
+                        color: Colors.white70,
+                      ),
+                      inputtedTextWidget==null?Container():inputtedTextWidget
+                    ]),
+              ),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Card(
+                        child: TextField(
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Enter text to add',
+                              contentPadding: const EdgeInsets.all(20.0)
+                          ),
+                          controller: textEditingController,
 //                    onChanged: (s){
 //                      return presenter.onTextChanged(s);
 //                    },
-                  ), Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      FlatButton(
-                        onPressed: () {
-                          String temp = textEditingController.text+"";
-                          textEditingController.text = "";
-                          presenter.onTextChanged(temp);
-                        },
-                        child: Text(
-                          "ADD",
-                        ),
-                      ), 
-                      FlatButton(
-                        onPressed: () {    
-                          presenter.clearText();          
-                        },
-                        child: Text(
-                          "RESET",
                         ),
                       )
-                    ],
-                  ),
-                ],
-              ),
-            )
-          ],
+                      ,
+                    )
+                    , Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        FlatButton(
+                          onPressed: () {
+                            String temp = textEditingController.text+"";
+                            textEditingController.text = "";
+                            presenter.onTextChanged(temp);
+                          },
+                          child: Text(
+                              "ADD",
+                              style: new TextStyle(
+                                fontSize: 30.0,
+                                color: Colors.black,
+                              )
+                          ),
+                        ),
+                        FlatButton(
+                          onPressed: () {
+                            presenter.clearText();
+                          },
+                          child: Text(
+                              "RESET",
+                              style: new TextStyle(
+                                fontSize: 30.0,
+                                color: Colors.grey,
+                              )
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -103,15 +140,30 @@ class _TypeWriterPageStatefulWidget extends State<TypeWriterPage> implements Typ
 
   }
 
+
+
   @override
   void initBlocs() {
     print("initBlocs: ");
+    _scrollController = new ScrollController();
     inputtedTextWidget = StreamBuilder <String>(
       stream: inputTextPublishSubject,
-      initialData: "Empty! please Add first. ["+counter.toString()+"]",
+      initialData: "",
       builder: (BuildContext context, AsyncSnapshot<String> snapshot){
         print("initBlocs: counter:"+counter.toString());
-        return Text(snapshot.data);
+        return Padding(
+          padding: EdgeInsets.all(20),
+          child: SingleChildScrollView(
+            controller: _scrollController,
+            child: Text(snapshot.data,
+                style: new TextStyle(
+                  fontSize: 30.0,
+                  color: Colors.black,
+                )
+            ),
+          ),
+        );
+        //return Text(snapshot.data);
       },
     );
   }

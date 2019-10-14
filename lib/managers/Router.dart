@@ -32,6 +32,8 @@ class ROUTE_NAMES{
 class RouterImpl implements Router{
 
 
+  var typeWriterPage;
+
   BuildContext context;
   @override
   PresenterComponent presenterComponent;
@@ -40,6 +42,7 @@ class RouterImpl implements Router{
   @override
   void init(PresenterComponent presenterComponent) {
     this.presenterComponent = presenterComponent;
+
   }
 
   @override
@@ -73,9 +76,16 @@ class RouterImpl implements Router{
 
       case ROUTE_NAMES.TYPEWRITER:
         return MaterialPageRoute(builder: (context) {
-          var typeWriterPageStatefulWidget = new TypeWriterPage("TypeWriter", this.presenterComponent.typeWriterPresenter);
-          return typeWriterPageStatefulWidget;
+          if (typeWriterPage==null){
+            typeWriterPage = new TypeWriterPage("TypeWriter", this.presenterComponent.typeWriterPresenter);
+          }
+          return typeWriterPage;
         });
     }
+  }
+
+  @override
+  void closePage() {
+    navigatorKey.currentState.canPop();
   }
 }

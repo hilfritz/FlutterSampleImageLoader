@@ -65,8 +65,8 @@ class MainPresenterImpl implements MainPresenter{
 
   @override
   void onTap() {
-    router.openTypeWriterPage();
-    //populate();
+    //router.openTypeWriterPage();
+    populate();
   }
 
   @override
