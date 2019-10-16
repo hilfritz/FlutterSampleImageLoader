@@ -15,7 +15,7 @@ abstract class Router implements TypeWriterRouter{
 
   void openIncrementDecrementPage();
   void openImageDetailPage();
-  Route<dynamic> generateRoute(RouteSettings settings);
+  Route<PageRoute> generateRoute(RouteSettings settings);
 }
 /**
  * https://www.filledstacks.com/snippet/quick-and-easy-dialogs-in-flutter-with-rf-flutter/
@@ -42,7 +42,11 @@ class RouterImpl implements Router{
   @override
   void init(PresenterComponent presenterComponent) {
     this.presenterComponent = presenterComponent;
+
+    //INITIALIZE PAGES
     typeWriterPage = new TypeWriterPage("TypeWriter", this.presenterComponent.typeWriterPresenter);
+
+
   }
 
   @override
@@ -71,11 +75,10 @@ class RouterImpl implements Router{
   }
 
   @override
-  Route<dynamic> generateRoute(RouteSettings settings) {
+  Route<PageRoute> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-
       case ROUTE_NAMES.TYPEWRITER:
-        return MaterialPageRoute(builder: (context) {
+        return OpenPageAnimationMaterialPageRoute(builder: (context) {
           return typeWriterPage;
         });
     }
@@ -84,5 +87,54 @@ class RouterImpl implements Router{
   @override
   void closePage() {
     navigatorKey.currentState.canPop();
+  }
+}
+
+/*
+ * https://stackoverflow.com/questions/56792479/flutter-animate-transition-to-named-route
+ * https://medium.com/flutter-community/everything-you-need-to-know-about-flutter-page-route-transition-9ef5c1b32823
+ */
+class OpenPageAnimationMaterialPageRoute<T> extends MaterialPageRoute<T> {
+  OpenPageAnimationMaterialPageRoute({
+    @required WidgetBuilder builder,
+    RouteSettings settings,
+    bool maintainState = true,
+    bool fullscreenDialog = false,
+  }) : super(
+      builder: builder,
+      maintainState: maintainState,
+      settings: settings,
+      fullscreenDialog: fullscreenDialog);
+
+  @override
+  Widget buildTransitions(
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child) {
+    return ScaleTransition(
+      scale: Tween<double>(
+        begin: 0.0,
+        end: 1.0,
+      ).animate(
+        CurvedAnimation(
+          parent: animation,
+          curve: Curves.fastOutSlowIn,
+        ),
+      ),
+      child: RotationTransition(
+        turns: Tween<double>(
+          begin: 0.0,
+          end: 1.0,
+        ).animate(
+          CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeOut,
+          ),
+        ),
+        child: child,
+      ),
+    );
+    //return child;
   }
 }

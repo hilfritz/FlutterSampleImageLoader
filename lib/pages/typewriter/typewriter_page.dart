@@ -34,18 +34,21 @@ class _TypeWriterPageStatefulWidget extends State<TypeWriterPage> implements Typ
     super.initState();
   }
 
-  void hideKeyboard(BuildContext context){
-    FocusScope.of(context).requestFocus(new FocusNode());
-  }
+
   void scrollToBottom(){
     var scrollPosition = _scrollController.position;
-    if (scrollPosition.viewportDimension < scrollPosition.maxScrollExtent) {
-      _scrollController.animateTo(
-        scrollPosition.maxScrollExtent,
-        duration: new Duration(milliseconds: 200),
-        curve: Curves.easeOut,
-      );
-    }
+    print("scrollToBottom: scrollPosition.viewportDimension:"+scrollPosition.viewportDimension.toString()+" scrollPosition.maxScrollExtent:"+scrollPosition.maxScrollExtent.toString());
+    //if (scrollPosition.viewportDimension < scrollPosition.maxScrollExtent) {
+    _scrollController.animateTo(
+      scrollPosition.maxScrollExtent,
+      duration: new Duration(milliseconds: 200),
+      curve: Curves.easeOut,
+    );
+    //}
+  }
+
+  void hideKeyboard(BuildContext context){
+    FocusScope.of(context).requestFocus(new FocusNode());
   }
 
   @override
@@ -137,10 +140,11 @@ class _TypeWriterPageStatefulWidget extends State<TypeWriterPage> implements Typ
   @override
   void initBlocs() {
     print("initBlocs: ");
-    _scrollController = new ScrollController();
+    _scrollController = new ScrollController(  initialScrollOffset: 0.0,
+      keepScrollOffset: true);
     inputtedTextWidget = StreamBuilder <String>(
       stream: inputTextPublishSubject,
-      initialData: "",
+      initialData: "a\n b\n c \n d \n e \n f \n g \n h \n i \n j \n k",
       builder: (BuildContext context, AsyncSnapshot<String> snapshot){
         print("initBlocs: counter:"+counter.toString());
         return Padding(
@@ -158,6 +162,8 @@ class _TypeWriterPageStatefulWidget extends State<TypeWriterPage> implements Typ
         //return Text(snapshot.data);
       },
     );
+
+
   }
 
 
