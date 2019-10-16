@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:imageloader_sample/managers/Router.dart';
 import 'package:imageloader_sample/pages/main/MainPage.dart';
 import 'package:imageloader_sample/pages/typewriter/typewriter_presenter.dart';
 import 'package:rxdart/rxdart.dart';
 
 class TypeWriterPage extends StatefulWidget  {
   final TypeWriterPresenter presenter;
-  final String title;
-  TypeWriterPage(this.title, this.presenter);
-
+  Router router;
+  TypeWriterPage(this.presenter, this.router);
   @override
   _TypeWriterPageStatefulWidget createState() {
-
-    return _TypeWriterPageStatefulWidget(this.presenter);
+    return _TypeWriterPageStatefulWidget(presenter, router);
   }
 }
 
 class _TypeWriterPageStatefulWidget extends State<TypeWriterPage> implements TypeWriterView {
 
   final TypeWriterPresenter presenter;
+  final Router router;
   TextEditingController textEditingController = new TextEditingController();
   @override
   PublishSubject<String> inputTextPublishSubject;
@@ -26,10 +26,10 @@ class _TypeWriterPageStatefulWidget extends State<TypeWriterPage> implements Typ
   int counter=0;
   ScrollController _scrollController;
 
-  _TypeWriterPageStatefulWidget(this.presenter);
+  _TypeWriterPageStatefulWidget(this.presenter, this.router);
   @override
   void initState() {
-    this.presenter.initView(this);
+    this.presenter.init(this, router);
     this.presenter.populate();
     super.initState();
   }
@@ -57,7 +57,16 @@ class _TypeWriterPageStatefulWidget extends State<TypeWriterPage> implements Typ
     return MaterialApp(
 
       home: Scaffold(
-        appBar: AppBar(title: Text("TypeWriter")),
+        appBar: AppBar(
+            centerTitle: true,
+            title: Text("TypeWriter"),
+            leading: IconButton(icon:Icon(Icons.arrow_back_ios),
+              onPressed:() {
+                router.goBack();
+              },
+            )
+
+        ),
 
         body: new GestureDetector(
           onTap: (){

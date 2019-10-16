@@ -27,10 +27,11 @@ abstract class ImageLoadingUseCase implements BaseUseCase{
 }
 abstract class ImageLoadingUseCasePresenter implements BasePresenter{}
 abstract class ImageLoadingUseCaseView{
-  PublishSubject<Uint8List> imagePublishSubject;
+  PublishSubject<Uint8List> imagePublishsubjectStream;
   void showErrorPopup(String str);
   void addImageToDisplay(Uint8List files);
   void clearImages();
+  void setPageState(PAGE_STATE pageState);
 }
 
 abstract class ImageLoadingUseCaseModel {}
@@ -47,13 +48,15 @@ class ImageLoadingUseCaseImpl
   String TAG = "ImageLoadingUseCaseImpl";
   DateTime lastRun;
   DownloadManager downloadManager;
+
   @override int NUMBER_OF_IMAGES = 4;
   @override ImageLoadingUseCasePresenter presenter;
   @override ImageLoadingUseCaseView view;
 
   @override
   void init(MainPresenter p, FileManager fm, DownloadManager dm, Logger lg,
-      ImageLoadingUseCaseView v) {
+      ImageLoadingUseCaseView v
+      ) {
     //INTITIALIZE
     presenter = p;
     fileManager = fm;
@@ -63,20 +66,24 @@ class ImageLoadingUseCaseImpl
     downloadManager.init(this);
     logger.start(TAG);
     logger.logg("init:");
-
+    if (this.view.imagePublishsubjectStream==null){
+      this.view.imagePublishsubjectStream = new PublishSubject<Uint8List>();
+    }
   }
+
+  bool canSetStateToList = false;
 
   @override
   void run() async {
-    if (this.view.imagePublishSubject!=null){
-      this.view.imagePublishSubject = new PublishSubject<Uint8List>();
-    }
+
     int currentMilli = new DateTime.now().millisecondsSinceEpoch;
     if (lastRun != null &&
         (currentMilli - lastRun.millisecondsSinceEpoch) < 3000) {
       logger.logg("run: too soon");
       return;
     }
+    canSetStateToList = true;
+    view.setPageState(PAGE_STATE.loading);
     lastRun = new DateTime.now();
     logger.logg("run: ");
     view.clearImages();
@@ -139,16 +146,23 @@ class ImageLoadingUseCaseImpl
     return bytes;
   }
 
+
+
   @override
   void onFileDownLoaded(
-      DownloadTaskInfo downloadTaskInfo, DownloadTaskStatus status) {        
-    if (status == DownloadTaskStatus.complete) {      
+      DownloadTaskInfo downloadTaskInfo, DownloadTaskStatus status) {
+    if (canSetStateToList) {
+      canSetStateToList = false;
+      view.setPageState(PAGE_STATE.list);
+    }
+    if (status == DownloadTaskStatus.complete) {
       //PASS IMAGE BYTES TO VIEW
       _readFileByte(downloadTaskInfo.path).then((x){
         view.addImageToDisplay(x);
+        //view.imagePublishsubjectStream.add(x);
       }).catchError((onError){
         view.showErrorPopup("Oops something went wrong, please try again.");
-      });        
+      });
       if (downloadManager.downloadTasksList.length==0){
         
       }

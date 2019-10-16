@@ -17,40 +17,38 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'MainPresenter.dart';
 
 class MainPage extends StatelessWidget {
-  SessionComponent sessionComponent;
+
   MainPresenter mainPresenter;
-  MainPage(this.sessionComponent);
+  Router router;
+  MainPage(this.mainPresenter, this.router);
 
   @override
   Widget build(BuildContext context) {
-    this.mainPresenter = this.sessionComponent.presenterComponent.mainPresenter;
-    this.mainPresenter.router.initContext(context);
 
     return MaterialApp(
       title: 'Amazing Photos',
-      navigatorKey: this.mainPresenter.router.getNavigatorKey(),
+      navigatorKey: this.router.getPageRouterKey(),
       initialRoute: ROUTE_NAMES.MAIN,
       onGenerateRoute: (RouteSettings routeSettings){
-        return this.sessionComponent.routeManager.generateRoute(routeSettings);
+        return router.generateRoute(routeSettings);
       } ,
-
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePageStatefulWidget('Amazing Photos', this.mainPresenter),
+      home: HomePageStatefulWidget(this.mainPresenter, this.router),
     );
   }
 }
 
 class HomePageStatefulWidget extends StatefulWidget  {
   final MainPresenter mainPresenter;
-  final String title;
-  HomePageStatefulWidget(this.title, this.mainPresenter);
+  final Router router;
+  HomePageStatefulWidget( this.mainPresenter, this.router);
 
   @override
   _MainPageStatefulWidgetState createState() {
 
-    return _MainPageStatefulWidgetState(this.mainPresenter);
+    return _MainPageStatefulWidgetState(this.mainPresenter, this.router);
   }
 }
 
@@ -59,25 +57,25 @@ class _MainPageStatefulWidgetState extends State<HomePageStatefulWidget> impleme
   bool goBack = false;
   bool permissionGranted = false;
   List<Uint8List> images = new List<Uint8List>();
+  //PublishSubject<List<Uint8List>> imagePublishsubjectStream;
+  PublishSubject<Uint8List> imagePublishsubjectStream;
   final MainPresenter mainPresenter;
-  bool isTapped = false;
-  _MainPageStatefulWidgetState(this.mainPresenter);
+  final Router router;
+  _MainPageStatefulWidgetState(this.mainPresenter, this.router);
   List<Choice> choices = new List<Choice>();
-  @override
-  PublishSubject<Uint8List> imagePublishSubject;
+  Widget noneWidget, tapWidget, loadingWidget, listWidget;
+  PAGE_STATE pageState;
   @override
   void initState() {
+
     super.initState();
+    this.mainPresenter.initView(this);
     choices.add(new Choice(title:"Typewriter"));
     choices.add(new Choice(title:"About"));
-    this.mainPresenter.initView(this);
   }
 
   Widget freeSpace = Container(padding: EdgeInsets.all(10),);
   Widget freeSpageSmall = Container(padding: EdgeInsets.all(5),);
-
-
-
 
   void askPermissions() async{
     Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions([PermissionGroup.storage]);
@@ -90,8 +88,6 @@ class _MainPageStatefulWidgetState extends State<HomePageStatefulWidget> impleme
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     DisplayElements.init(context);
@@ -103,78 +99,81 @@ class _MainPageStatefulWidgetState extends State<HomePageStatefulWidget> impleme
         return new Future<bool>.value(goBack);
       } ,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-
-          actions: <Widget>[
-            PopupMenuButton<Choice>(
-              onSelected: (Choice choice){
-                if (choice.title==choices[0].title){
-                  this.widget.mainPresenter.router.openTypeWriterPage();
-                }else if (choice.title==choices[1].title){
-
-                }
-              },
-              itemBuilder: (BuildContext context) {
-                return choices.skip(0).map((Choice choice) {
-                  return PopupMenuItem<Choice>(
-                    value: choice,
-                    child: Text(choice.title),
-                  );
-                }).toList();
-              },
-            ),
-          ],
-
-        ),
-        body: getBody(),
+        appBar: _buildAppBar(),
+        body: _buildBodyByState(),
         // This trailing comma makes auto-formatting nicer for build methods.
       )
     );
-
   }
 
-  Widget requestPermissionBody(){
-    Widget requestButton = MaterialButton(
-      onPressed: (){
-        return askPermissions();
-      },
-      highlightColor: Colors.white,
-      color: Colors.white,
-      textColor: Colors.blue,
-      padding: EdgeInsets.all( 15),
-      textTheme: ButtonTextTheme.accent,
-      child: Text('Allow Storage Permission', style: TextStyle(fontSize: 20.0),),
-      shape: StadiumBorder(
+  AppBar _buildAppBar() {
+    return AppBar(
+        centerTitle: true,
+        title: Text("Amazing Photos"),
+        actions: <Widget>[
+          PopupMenuButton<Choice>(
+            onSelected: (Choice choice){
+              if (choice.title==choices[0].title){
+                this.widget.mainPresenter.router.openTypeWriterPage();
+              }else if (choice.title==choices[1].title){
 
-      ),
-
-    );
-    Widget body =  Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          new Text(
-            "This app needs Storage permission to download data.",
-            style: TextStyle(fontWeight: FontWeight.w400,
-                fontSize: 20,
-              color: Colors.black54,
-            ),
-            textAlign: TextAlign.center,
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return choices.skip(0).map((Choice choice) {
+                return PopupMenuItem<Choice>(
+                  value: choice,
+                  child: Text(choice.title),
+                );
+              }).toList();
+            },
           ),
-          freeSpace,
-          freeSpace,
-          requestButton,
-        ]);
-    return Container(
-      padding: EdgeInsets.all( 25),
-      child: body,
-    );
+        ],
+
+      );
   }
+
+//  Widget _buildRequestPermissionWidget(){
+//    Widget requestButton = MaterialButton(
+//      onPressed: (){
+//        return askPermissions();
+//      },
+//      highlightColor: Colors.white,
+//      color: Colors.white,
+//      textColor: Colors.blue,
+//      padding: EdgeInsets.all( 15),
+//      textTheme: ButtonTextTheme.accent,
+//      child: Text('Allow Storage Permission', style: TextStyle(fontSize: 20.0),),
+//      shape: StadiumBorder(
+//
+//      ),
+//
+//    );
+//    Widget body =  Column(
+//        crossAxisAlignment: CrossAxisAlignment.stretch,
+//        mainAxisAlignment: MainAxisAlignment.center,
+//        children: <Widget>[
+//          new Text(
+//            "This app needs Storage permission to download data.",
+//            style: TextStyle(fontWeight: FontWeight.w400,
+//                fontSize: 20,
+//              color: Colors.black54,
+//            ),
+//            textAlign: TextAlign.center,
+//          ),
+//          freeSpace,
+//          freeSpace,
+//          requestButton,
+//        ]);
+//    return Container(
+//      padding: EdgeInsets.all( 25),
+//      child: body,
+//    );
+//  }
 
 
   
-  Widget getInstructionsWidget(){  
+  Widget _buildLoadingWidget(){
     return Container(
         color: Colors.black,
         padding: EdgeInsets.all(30),
@@ -184,106 +183,183 @@ class _MainPageStatefulWidgetState extends State<HomePageStatefulWidget> impleme
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                isTapped==true?SpinKitWave(
+                SpinKitWave(
                                 color: Colors.lightBlueAccent,
                                 size: 50.0,
-                              ):Container(),
-                isTapped==true?freeSpace:Container(),
+                              ),
+                freeSpace,
                 //"Alright!, \nNow loading..."
-                isTapped==true?Center(
+                Center(
                         child:
                         new InstructionTextWidget("Now loading..", true),
-                      ):Container(),
-                isTapped==false?SpringButton(
-                  SpringButtonType.OnlyScale,
-                  new InstructionTextWidget("Tap & Hold", false),
-                  onLongPress: () {
-                    setState(() {
-                      print("tap:");
-                      isTapped = !isTapped;                      
-                      this.mainPresenter.populate();                      
-                    });                   
-                  },
-                ):Container(),                
+                      ),
+                Container(),
               ],
             ),
           )
     );
   }
 
-  Widget getBodyFromStream(){
-    var x = StreamBuilder<Uint8List> (
-      stream: imagePublishSubject,
-      builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot){
-        if (snapshot.hasData==false){
-          return getInstructionsWidget();
-        }else{
-
-        }
-      },
+  Widget _buildTapWidget(){
+    return Container(
+        color: Colors.black,
+        padding: EdgeInsets.all(30),
+        child:
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              SpringButton(
+                SpringButtonType.OnlyScale,
+                new InstructionTextWidget("Tap & Hold", false),
+                onLongPress: () {
+                    this.mainPresenter.populate();
+                    },
+              ),
+            ],
+          ),
+        )
     );
-
   }
 
-  Widget getBody() {
-    if (this.images.length==0){
-      return getInstructionsWidget();
+
+  Widget _buildBodyByState(){
+    if (tapWidget==null || noneWidget==null){
+      tapWidget = _buildTapWidget();
     }
-    return GestureDetector(
-          onTap: (){
+    if (loadingWidget==null){
+      loadingWidget = _buildLoadingWidget();
+    }
+//    if (listWidget==null){
+//      listWidget = _buildPhotoGridWidget();
+//    }
+//    noneWidget = _buildTapWidget();
+//    tapWidget = _buildTapWidget();
+//    loadingWidget = _buildLoadingWidget();
+    listWidget = _buildPhotoGridWidget();
+    Widget body = tapWidget;
+    print("getBodyByState: "+pageState.toString());
+      if (pageState==PAGE_STATE.none){
+        body = noneWidget;
+      }else if (pageState==PAGE_STATE.tap){
+        body = tapWidget;
+      }else if (pageState==PAGE_STATE.loading){
+        body = loadingWidget;
+      }else if (pageState==PAGE_STATE.list){
+        body = listWidget;
+      }
+    return body;
+  }
 
-          },
-           onLongPress: () {
-            this.mainPresenter.onTap();
-          },
-          child: Container(
-            color: Colors.black,
-            padding: EdgeInsets.all(10),
-            child: SingleChildScrollView(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      freeSpageSmall,
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          new Text(
-                            'Tap & hold again',
-                            style: TextStyle(fontWeight: FontWeight.w400,
-                              fontSize: 18,
-                              color: Colors.lightBlueAccent,
-                            ),
-                            textAlign: TextAlign.center,
+
+  GestureDetector _buildPhotoGridWidget() {
+    return GestureDetector(
+        onTap: (){
+
+        },
+         onLongPress: () {
+          this.mainPresenter.onTap();
+        },
+        child: Container(
+            constraints: BoxConstraints.expand(),
+          color: Colors.black,
+          padding: EdgeInsets.all(10),
+          child: SingleChildScrollView(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    freeSpageSmall,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        new Text(
+                          'Tap & hold again',
+                          style: TextStyle(fontWeight: FontWeight.w400,
+                            fontSize: 18,
+                            color: Colors.lightBlueAccent,
                           ),
-                          // freeSpageSmall,
-                          //  (this.loadingVisibility==true?SpinKitFadingCircle(
-                          //   color: Colors.lightBlueAccent,
-                          //   size: 15.0,
-                          // ):Container())
-                        ],
-                      )
-                      ,
-                      freeSpageSmall,
-                  Padding(
-                      padding: const EdgeInsets.only(top: 15.0),
-                      child: getImageGrid())
-                      //child: getGridView(isPortrait)),
-                ]))),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    )
+                    ,
+                    freeSpageSmall,
+                Padding(
+                    padding: const EdgeInsets.only(top: 15.0),
+                    child: _getImageGrid())
+                    //child: getGridView(isPortrait)),
+              ]))),
     );
   }
 
-  Widget getImageGrid() {
+  Widget _getImageGrid() {
     var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    Widget orientationBuilder = new OrientationBuilder(
+    Widget orientationBuilder = Container();
+
+//    orientationBuilder = StreamBuilder(
+//      stream: imagePublishsubjectStream.stream,
+//      builder: (context, AsyncSnapshot<List<Uint8List>> snapshot) {
+//        if (snapshot.hasData) {
+//          //return createGridListItems(isPortrait, snapshot.data);
+//          List<Widget> list = List<Widget>();
+//          print("_getImageGrid length: "+snapshot.data.length.toString());
+//          for (int x = 0; x < snapshot.data.length; x++){
+//            print("_getImageGrid $x ");
+//            list.add(_getPhotoItem(isPortrait, snapshot.data[x]));
+//          }
+//          return new OrientationBuilder(
+//            builder: (context, orientation) {
+//              return GridView.count(
+//                crossAxisCount: orientation == Orientation.portrait ?  2: 3,
+//                //children: createGridListItems(isPortrait, this.images)
+//                children: list,
+//              );
+//            },
+//          );
+//        } else if (snapshot.hasError) {
+//          print("_getImageGrid has error");
+//          return Container();
+//        }
+//        print("_getImageGrid no data");
+//        return Center(child: CircularProgressIndicator());
+//      },
+//    );
+//    List<Widget> grids = new List<Widget>();
+//    StreamBuilder(
+//        stream: imagePublishsubjectStream,
+//        builder: (context, AsyncSnapshot<Uint8List> snapshot) {
+//          if (snapshot.hasData) {
+//            print("_getImageGrid has data");
+//            grids.add(_getPhotoItem(isPortrait, snapshot.data));
+//            //return _getPhotoItem(isPortrait, snapshot.data );
+//          } else if (snapshot.hasError) {
+//            print("_getImageGrid has error");
+//            return Container();
+//          }
+//          print("_getImageGrid no data");
+//          return Center(child: CircularProgressIndicator());
+//        }
+//    );
+//    orientationBuilder = OrientationBuilder(
+//      builder: (context, orientation) {
+//        return GridView.count(
+//          crossAxisCount: orientation == Orientation.portrait ?  2: 3,
+//          //children: createGridListItems(isPortrait, this.images)
+//          children: grids,
+//        );
+//      },
+//    );
+    orientationBuilder = new OrientationBuilder(
       builder: (context, orientation) {
         return GridView.count(
           crossAxisCount: orientation == Orientation.portrait ?  2: 3,
-          children: createGridListItems(isPortrait)
+          children: createGridListItems(isPortrait, this.images)
         );
       },
     );
@@ -296,15 +372,12 @@ class _MainPageStatefulWidgetState extends State<HomePageStatefulWidget> impleme
     );
   }
 
-  Widget _getGridviewItems(int index, bool isPortrait, Uint8List file){        
+  Widget _getPhotoItem(bool isPortrait, Uint8List file){
     return Container(
         padding: EdgeInsets.all(isPortrait==true?10:0),
         child: Stack(
           children: <Widget>[
-            Center(child: SpinKitThreeBounce(
-                                color: Colors.lightBlueAccent,
-                                size: 15.0,)),
-            Center(                
+            Center(
                 child:                 
                 Image.memory(              
                   file, fit: BoxFit.cover, width: 200, height: 200,
@@ -315,22 +388,18 @@ class _MainPageStatefulWidgetState extends State<HomePageStatefulWidget> impleme
     );
   }
 
-  List<Widget> createGridListItems(bool isPortrait) {
-    int length = this.images.length;
+  List<Widget> createGridListItems(bool isPortrait, List<Uint8List> images) {
+    int length = images.length;
     //print("createGridListItems: length:$length");
     List<Widget> list = List<Widget>();
     for (int x = 0; x < length; x++){
-      list.add(_getGridviewItems(x,isPortrait, this.images[x]));
+      list.add(_getPhotoItem(isPortrait, images[x]));
     }
     list.add(Container());
     list.add(Container());
     list.add(Container());
     return list;
   }
-
-
-  @override
-  bool isLoadingAnimationHidden;
 
   @override
   void showErrorPopup(String str) {
@@ -347,6 +416,8 @@ class _MainPageStatefulWidgetState extends State<HomePageStatefulWidget> impleme
   @override
   void dispose() {
     super.dispose();
+
+    imagePublishsubjectStream.close();
     this.mainPresenter.destroy();
   }
 
@@ -372,15 +443,24 @@ class _MainPageStatefulWidgetState extends State<HomePageStatefulWidget> impleme
 
   @override
   void closePage({int delay = 0}) async {
-    Navigator.canPop(context);
+    //Navigator.canPop(context);
+    router.goBack();
   }
+
+  @override
+  void setPageState(PAGE_STATE pageState) {
+    setState(() {
+      this.pageState = pageState;
+    });
+  }
+
+
 
 
 }
 
 class Choice {
   const Choice({this.title});
-
   final String title;
 }
 

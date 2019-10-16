@@ -8,6 +8,6 @@ void main() {
   SessionComponent sessionComponent = new SessionComponent();
   sessionComponent.init().then((x){
     //runApp(MainPage(sessionComponent));
-    runApp(MainPage(sessionComponent));
+    runApp(MainPage(sessionComponent.presenterComponent.mainPresenter, sessionComponent.routeManager));
   });
 }

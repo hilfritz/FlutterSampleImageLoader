@@ -10,8 +10,8 @@ import 'package:imageloader_sample/pages/typewriter/typewriter_presenter.dart';
 abstract class Router implements TypeWriterRouter{
   PresenterComponent presenterComponent;
   void init(PresenterComponent presenterComponent);
-  void initContext(BuildContext context);
-  GlobalKey<NavigatorState> getNavigatorKey();
+  GlobalKey<NavigatorState> getPageRouterKey();
+  void goBack();
 
   void openIncrementDecrementPage();
   void openImageDetailPage();
@@ -37,14 +37,14 @@ class RouterImpl implements Router{
   BuildContext context;
   @override
   PresenterComponent presenterComponent;
-  final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
+  final GlobalKey<NavigatorState> pageRouterKey = new GlobalKey<NavigatorState>();
 
   @override
   void init(PresenterComponent presenterComponent) {
     this.presenterComponent = presenterComponent;
 
     //INITIALIZE PAGES
-    typeWriterPage = new TypeWriterPage("TypeWriter", this.presenterComponent.typeWriterPresenter);
+    typeWriterPage = new TypeWriterPage(this.presenterComponent.typeWriterPresenter, this);
 
 
   }
@@ -61,17 +61,12 @@ class RouterImpl implements Router{
 
   @override
   void openTypeWriterPage() {
-    navigatorKey.currentState.pushNamed(ROUTE_NAMES.TYPEWRITER);
+    pageRouterKey.currentState.pushNamed(ROUTE_NAMES.TYPEWRITER);
   }
 
   @override
-  void initContext(BuildContext ctx) {
-    context = ctx;
-  }
-
-  @override
-  GlobalKey<NavigatorState> getNavigatorKey() {
-    return navigatorKey;
+  GlobalKey<NavigatorState> getPageRouterKey() {
+    return pageRouterKey;
   }
 
   @override
@@ -85,8 +80,8 @@ class RouterImpl implements Router{
   }
 
   @override
-  void closePage() {
-    navigatorKey.currentState.canPop();
+  void goBack() {
+    pageRouterKey.currentState.pop();
   }
 }
 

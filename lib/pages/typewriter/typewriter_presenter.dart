@@ -1,9 +1,10 @@
+import 'package:imageloader_sample/managers/Router.dart';
 import 'package:imageloader_sample/pages/Base.dart';
 import 'package:imageloader_sample/pages/typewriter/usecases/change_text_tistener_usecase.dart';
 
 abstract class TypeWriterPresenter implements  ChangeTextListenerPresenter{
   TypeWriterView view;
-  void initView(TypeWriterView v);
+  void init(TypeWriterView v, Router router);
   void populate();
 }
 abstract class TypeWriterView implements ChangeTextListenerView{
@@ -11,7 +12,6 @@ abstract class TypeWriterView implements ChangeTextListenerView{
 
 abstract class TypeWriterRouter{
   void openTypeWriterPage();
-  void closePage();
 }
 
 class TypeWriterPresenterImpl implements TypeWriterPresenter{
@@ -20,7 +20,7 @@ class TypeWriterPresenterImpl implements TypeWriterPresenter{
   ChangeTextListenerUseCase changeTextListenerUseCase;
 
   @override
-  void initView(TypeWriterView v) {
+  void init(TypeWriterView v, Router router) {
     changeTextListenerUseCase = new ChangeTextListenerUseCaseImpl();
     changeTextListenerUseCase.init(this, v);
 

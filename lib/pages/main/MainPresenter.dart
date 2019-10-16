@@ -5,6 +5,7 @@ import 'package:imageloader_sample/managers/Router.dart';
 import 'package:imageloader_sample/pages/main/usecases/CloseAppUseCase.dart';
 import '../Base.dart';
 import 'usecases/ImageLoadingUseCase.dart';
+import 'package:rxdart/rxdart.dart';
 /**
  * @author Hilfritz Camallere
  */
@@ -15,7 +16,6 @@ enum PAGE_STATE {
   list
 }
 abstract class MainPresenter implements  ImageLoadingUseCasePresenter, CloseAppPresenter{
-  PAGE_STATE pageState;
   MainView view;
   Logger logger;
   DownloadManager downloadManager;
@@ -28,10 +28,11 @@ abstract class MainPresenter implements  ImageLoadingUseCasePresenter, CloseAppP
   void onTapAndHold();
 }
 abstract class MainView implements ImageLoadingUseCaseView, CloseAppUseCaseView{
+  void setPageState(PAGE_STATE pageState);
 }
 class MainPresenterImpl implements MainPresenter{
   String TAG = "MainPresenterImpl";
-  @override PAGE_STATE pageState;
+
   @override Logger logger;
   @override MainView view;
   @override DownloadManager downloadManager;
@@ -41,12 +42,14 @@ class MainPresenterImpl implements MainPresenter{
   CloseAppUseCase closeAppUseCase;
   void initView(MainView v){
     view = v;
+    view.setPageState(PAGE_STATE.tap);
     //INITIALIZE USECASES
     imageLoadingUseCase = new ImageLoadingUseCaseImpl();
     imageLoadingUseCase.init(this, fileManager, downloadManager, logger,view);
     closeAppUseCase = new CloseAppUseCaseImpl();
     closeAppUseCase.init(this, view);
   }
+
   @override
   void init(FileManager fm, DownloadManager dm, Logger lg, Router rt) {
     //INITIALIZE VARIABLES
