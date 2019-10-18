@@ -94,10 +94,15 @@ class _MainPageStatefulWidgetState extends State<HomePageStatefulWidget> impleme
     //ASK THE CORRECT PERMISSIONS FIRST
     askPermissions();
     return new WillPopScope(
-      onWillPop: (){
+      onWillPop: () async{
         this.mainPresenter.onBackButtonTap();
-        return new Future<bool>.value(goBack);
+         return goBack;
       } ,
+
+      // onWillPop: (){
+      //   this.mainPresenter.onBackButtonTap();
+      //   return new Future<bool>.value(goBack);
+      // } ,
       child: Scaffold(
         appBar: _buildAppBar(),
         body: _buildBodyByState(),
@@ -454,9 +459,12 @@ class _MainPageStatefulWidgetState extends State<HomePageStatefulWidget> impleme
     });
   }
 
-
-
-
+  @override
+  void updateBySetState(Function callback) {
+    setState(() {
+      callback();
+    });
+  }
 }
 
 class Choice {

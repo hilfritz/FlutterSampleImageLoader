@@ -3,7 +3,6 @@ import 'package:imageloader_sample/pages/Base.dart';
 
 abstract class CloseAppPresenter implements BasePresenter{
   void onBackButtonTap();
-
 }
 
 abstract class CloseAppUseCaseView implements BaseViews{
@@ -39,8 +38,12 @@ class CloseAppUseCaseImpl implements CloseAppUseCase{
       view.showToast("Press back again to exit app. ");
     }else{
       if (difference < 1500){
-        view.goBack = true;
+        view.goBack = true;  
         //view.closePage(delay: 3000);
+        //  view.updateBySetState((){
+        //      view.goBack = true;  
+        //    });
+        
       }else{
         view.showToast("Press back again to exit app. ");
       }

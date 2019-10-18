@@ -175,5 +175,12 @@ class _TypeWriterPageStatefulWidget extends State<TypeWriterPage> implements Typ
 
   }
 
+  @override
+  void updateBySetState(Function callback) {
+    setState(() {
+      callback();
+    });
+  }
+
 
 }

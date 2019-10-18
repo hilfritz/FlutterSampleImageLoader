@@ -17,4 +17,7 @@ abstract class BaseViews{
    * delay int milliseconds
    */
   void closePage({int delay = 0});
+
+  void updateBySetState(Function callback);
+
 }
